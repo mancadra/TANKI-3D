@@ -1,0 +1,5 @@
+Manca D(logika igre):
+-detekcija trkov
+-streljanje metka
+- nacin streljanja
+- beleženje tock
