@@ -119,7 +119,7 @@ const bindGroup = device.createBindGroup({
 // Create the scene
 const model = new Node();
 model.addComponent(new Transform());
-model.addComponent({
+/*model.addComponent({
     update() {
         const time = performance.now() / 1000;
         const transform = model.getComponentOfType(Transform);
@@ -129,7 +129,7 @@ model.addComponent({
         quat.rotateX(rotation, rotation, time * 0.6);
         quat.rotateY(rotation, rotation, time * 0.7);
     }
-});
+});*/
 
 const camera = new Node();
 camera.addComponent(new Camera());
