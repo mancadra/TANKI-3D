@@ -13,7 +13,6 @@ export function createBuffer(device, { data, usage }) {
     return buffer;
 }
 
-// ustbari teksturo, ki jo podamo v mainu?
 export function createTextureFromSource(device, {
     source,
     format = 'rgba8unorm',

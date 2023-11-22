@@ -1,10 +1,10 @@
-import { mat4 } from '../lib/gl-matrix-module.js';
+import { mat4 } from '../../../lib/gl-matrix-module.js';
 
 import * as WebGPU from '../../../common/engine/WebGPU.js';
 
 import { createVertexBuffer } from '../../../common/engine/core/VertexUtils.js';
 
-export class Renderer {
+export class BaseRenderer {
 
     constructor(canvas) {
         this.canvas = canvas;
@@ -32,7 +32,6 @@ export class Renderer {
         );
     }
 
-    // Doda teksturo na objekt
     prepareImage(image) {
         if (this.gpuObjects.has(image)) {
             return this.gpuObjects.get(image);
@@ -57,7 +56,6 @@ export class Renderer {
         return gpuObjects;
     }
 
-    //ustvari objekt
     prepareMesh(mesh, layout) {
         if (this.gpuObjects.has(mesh)) {
             return this.gpuObjects.get(mesh);
