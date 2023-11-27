@@ -1,187 +1,77 @@
+import { ResizeSystem } from './common/engine/systems/ResizeSystem.js';
+import { UpdateSystem } from './common/engine/systems/UpdateSystem.js';
 
+import { GLTFLoader } from './common/engine/loaders/GLTFLoader.js';
 
+import { OrbitController } from './common/engine/controllers/OrbitController.js';
+import { RotateAnimator } from './common/engine/animators/RotateAnimator.js';
+import { LinearAnimator } from './common/engine/animators/LinearAnimator.js';
 
-let depthTexture;
+import {
+    Camera,
+    Model,
+    Node,
+    Transform,
+} from './common/engine/core.js';
 
+import { Renderer } from './Renderer.js';
+import { Light } from './Light.js';
 
-export async function initGPU() {
-    // Check if WebGPU is supported
-    if (!navigator.gpu) {
-        console.error("WebGPU is not supported. Please use a compatible browser.");
-        return;
-    }
+const canvas = document.querySelector('canvas');
+const renderer = new Renderer(canvas);
+await renderer.initialize();
 
-    // Get a GPU device
-    const adapter = await navigator.gpu.requestAdapter();
-    const device = await adapter.requestDevice();
+const gltfLoader = new GLTFLoader();
+await gltfLoader.load('common/models/monkey.gltf');
 
-    // Get the canvas and context
-    const canvas = document.querySelector("#webgpu-canvas");
-    const context = canvas.getContext("webgpu");
+const scene = gltfLoader.loadScene(gltfLoader.defaultScene);
 
-    // Define swap chain format and configure the canvas context
-    const swapChainFormat = "bgra8unorm";
-    context.configure({
-        device: device,
-        format: swapChainFormat,
+const camera = scene.find(node => node.getComponentOfType(Camera));
+camera.addComponent(new OrbitController(camera, document.body, {
+    distance: 8,
+}));
+
+const model = scene.find(node => node.getComponentOfType(Model));
+
+const light = new Node();
+light.addComponent(new Transform({
+    translation: [3, 3, 3],
+}));
+light.addComponent(new Light({
+    ambient: 0.35,
+}));
+light.addComponent(new LinearAnimator(light, {
+    startPosition: [3, 3, 3],
+    endPosition: [-3, -3, -3],
+    duration: 10,
+    loop: true,
+}));
+scene.addChild(light);
+
+let startTime = Date.now();
+let frameCount = 0;
+let u_resolution = [0, 0];
+
+function update(time, dt) {
+    scene.traverse(node => {
+        for (const component of node.components) {
+            component.update?.(time, dt);
+        }
     });
 
     
-    return { device, context, swapChainFormat };
 }
 
-
-
-export async function createCube({ device, context, swapChainFormat }) {
-    // ... Vertex and Index Buffer setup (same as previous example)
-     // Vertex data for a cube
-     const vertices = new Float32Array([
-        // Front face
-        -1.0, -1.0,  1.0, // v0
-         1.0, -1.0,  1.0, // v1
-         1.0,  1.0,  1.0, // v2
-        -1.0,  1.0,  1.0, // v3
-        // Back face
-        -1.0, -1.0, -1.0, // v4
-         1.0, -1.0, -1.0, // v5
-         1.0,  1.0, -1.0, // v6
-        -1.0,  1.0, -1.0, // v7
-    ]);
-
-    // Index data for the cube
-    const indices = new Uint16Array([
-        0, 1, 2, 2, 3, 0, // Front
-        4, 5, 6, 6, 7, 4, // Back
-        // ... add other faces indices
-    ]);
-
-    // Create a vertex buffer and index buffer
-    const vertexBuffer = device.createBuffer({
-        size: vertices.byteLength,
-        usage: GPUBufferUsage.VERTEX,
-        mappedAtCreation: true,
-    });
-    new Float32Array(vertexBuffer.getMappedRange()).set(vertices);
-    vertexBuffer.unmap();
-
-    const indexBuffer = device.createBuffer({
-        size: indices.byteLength,
-        usage: GPUBufferUsage.INDEX,
-        mappedAtCreation: true,
-    });
-    new Uint16Array(indexBuffer.getMappedRange()).set(indices);
-    indexBuffer.unmap();
-
-
-
-    const shaderCode = await loadShader('shaders/cubeShaderCode.wgsl');
-
-    const shaderModule = device.createShaderModule({
-        code: shaderCode, // Loaded from an external file
-    });
-
-    // Define the render pipeline
-    const pipeline = device.createRenderPipeline({
-        vertex: {
-            module: shaderModule,
-            entryPoint: 'vs_main',
-            buffers: [{
-                arrayStride: 3 * 4, // 3 components per vertex, 4 bytes per component
-                attributes: [{
-                    shaderLocation: 0,
-                    offset: 0,
-                    format: 'float32x3'
-                }]
-            }],
-        },
-        fragment: {
-            module: shaderModule,
-            entryPoint: 'fs_main',
-            targets: [{
-                format: swapChainFormat,
-            }],
-        },
-        primitive: {
-            topology: 'triangle-list',
-            cullMode: 'back',
-        },
-        depthStencil: {
-            format: 'depth24plus-stencil8',
-            depthWriteEnabled: true,
-            depthCompare: 'less',
-        },
-    });
-
-    // Function to create a depth texture
-    function createDepthTexture(device, context) {
-        depthTexture = device.createTexture({
-            size: {
-                width: context.canvas.width,
-                height: context.canvas.height,
-                depthOrArrayLayers: 1,
-            },
-            format: 'depth24plus-stencil8',
-            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING,
-        });
-    }
-
-    // Call to create the depth texture
-    createDepthTexture(device, context);
-
-    // Animation loop
-    function render() {
-        // Create a view of the depth texture for the current frame
-        const depthTextureView = depthTexture.createView();
-
-        const commandEncoder = device.createCommandEncoder();
-        const textureView = context.getCurrentTexture().createView();
-
-        const renderPassDescriptor = {
-            colorAttachments: [{
-                view: textureView,
-                clearValue: { r: 0.0, g: 0.0, b: 0.0, a: 1.0 },
-                loadOp: 'clear',
-                storeOp: 'store',
-            }],
-            depthStencilAttachment: {
-                view: depthTextureView,
-                depthClearValue: 1.0,
-                depthLoadOp: 'clear',
-                depthStoreOp: 'store',
-            },
-        };
-
-        const passEncoder = commandEncoder.beginRenderPass(renderPassDescriptor);
-        passEncoder.setPipeline(pipeline);
-        passEncoder.setVertexBuffer(0, vertexBuffer);
-        passEncoder.setIndexBuffer(indexBuffer, 'uint16');
-        passEncoder.drawIndexed(indices.length);
-        passEncoder.endPass();
-
-        device.queue.submit([commandEncoder.finish()]);
-        requestAnimationFrame(render);
-    }
-    requestAnimationFrame(render);
+function render() {
+    let elapsedTime = (Date.now() - startTime) / 1000; // seconds
+    frameCount = frameCount +1;
+    renderer.render(scene, camera, u_resolution, elapsedTime, frameCount);
 }
 
-function onResize() {
-    // Resize your canvas and swap chain as needed
-    context.configure({
-        device: device,
-        format: swapChainFormat,
-        size: [canvas.clientWidth, canvas.clientHeight],
-    });
-
-    // Recreate the depth texture
-    createDepthTexture(device, context);
+function resize({ displaySize: { width, height }}) {
+    camera.getComponentOfType(Camera).aspect = width / height;
+    u_resolution = [width, height];
 }
 
-async function loadShader(url) {
-    const response = await fetch(url);
-    if (!response.ok) {
-        throw new Error(`Failed to load shader: ${url}`);
-    }
-    return await response.text();
-}
-window.addEventListener('resize', onResize);
-window.addEventListener('resize', () => onResize(context));
+new ResizeSystem({ canvas, resize }).start();
+new UpdateSystem({ update, render }).start();
