@@ -33,7 +33,6 @@ export class Controller {
     }
 
     initHandlers() {
-        this.pointermoveHandler = this.pointermoveHandler.bind(this); // spremlja miško
         this.keydownHandler = this.keydownHandler.bind(this); // pritisk na tipko
         this.keyupHandler = this.keyupHandler.bind(this); // spust tipke
 
@@ -43,14 +42,6 @@ export class Controller {
         doc.addEventListener('keydown', this.keydownHandler);
         doc.addEventListener('keyup', this.keyupHandler);
 
-        element.addEventListener('click', e => element.requestPointerLock());
-        doc.addEventListener('pointerlockchange', e => {
-            if (doc.pointerLockElement === element) {
-                doc.addEventListener('pointermove', this.pointermoveHandler);
-            } else {
-                doc.removeEventListener('pointermove', this.pointermoveHandler);
-            }
-        });
     }
 
     update(t, dt) {
@@ -65,19 +56,19 @@ export class Controller {
         const acc = vec3.create()
         if (this.keys['KeyW']) {
             console.log("W pressed");
-            vec3.add(acc, acc, forward);
+            vec3.sub(acc, acc, forward);
         }
         if (this.keys['KeyS']) {
             console.log("S pressed");
-            vec3.sub(acc, acc, forward);
+            vec3.add(acc, acc, forward);
         }
         if (this.keys['KeyD']) {
             console.log("D pressed");
-            vec3.add(acc, acc, right);
+            vec3.sub(acc, acc, right);
         }
         if (this.keys['KeyA']) {
             console.log("A pressed");
-            vec3.sub(acc, acc, right);
+            vec3.add(acc, acc, right);
         }
 
         vec3.scaleAndAdd(this.velocity, this.velocity, acc, dt * this.acceleration);
@@ -105,31 +96,8 @@ export class Controller {
         }
         vec3.scaleAndAdd(transform.translation, transform.translation, this.velocity, dt);
 
-        // Update rotation based on the Euler angles.
-        const rotation = quat.create();
-        quat.rotateY(rotation, rotation, this.yaw);
-        quat.rotateX(rotation, rotation, this.pitch);
-        transform.rotation = rotation;
 
-        const translation = [0, 0, this.distance];
-        vec3.rotateX( translation,  translation, [0, 0, 0], this.pitch);
-        vec3.rotateY( translation,  translation, [0, 0, 0], this.yaw);
-
-        transform.translation = translation;
-    }
-
-    pointermoveHandler(e) {
-        const dx = e.movementX;
-        const dy = e.movementY;
-
-        this.pitch -= dy * this.pointerSensitivity;
-        this.yaw   -= dx * this.pointerSensitivity;
-
-        const twopi = Math.PI * 2;
-        const halfpi = Math.PI / 2;
-
-        this.pitch = Math.min(Math.max(this.pitch, -halfpi), halfpi);
-        this.yaw = ((this.yaw % twopi) + twopi) % twopi;
+        transform.translation = transform.translation;
     }
 
     keydownHandler(e) {

@@ -27,6 +27,7 @@ import { ImageLoader } from './common/engine/loaders/ImageLoader.js';
 import { JSONLoader } from './common/engine/loaders/JSONLoader.js';
 
 import { Controller } from './Controller.js';
+import { CevController } from './CevController.js';
 
 //import { FirstPersonController } from './common/engine/controllers/FirstPersonController.js';
 
@@ -53,6 +54,9 @@ const model = scene.find(node => node.getComponentOfType(Model));
 model.addComponent(new Controller(model, document.body, {
     distance: 2,
 }));
+
+const glava = gltfLoader.loadNode('glava');
+glava.addComponent(new CevController(glava, document.body));
 /*model.addComponent(new RotateAnimator(model, {
     startRotation: [0, 0, 0, 1],
     endRotation: [0.7071, 0, 0.7071, 0],
@@ -65,19 +69,20 @@ const camera = scene.find(node => node.getComponentOfType(Camera));
     distance: 20,
 }));*/
 scene.addChild(camera);
+glava.addChild(camera);
 
 
 const gltfLoader2 = new GLTFLoader();
 await gltfLoader2.load('common/models/cube.gltf');
 
-const kocka = gltfLoader2.loadNode('Cube');
+/*const kocka = gltfLoader2.loadNode('Cube');
 kocka.addComponent(new RotateAnimator(kocka, {
     startRotation: [0, 0, 0, 1],
     endRotation: [0.7071, 0, 0.7071, 0],
     duration: 5,
     loop: true,
 }));
-model.addChild(kocka);
+model.addChild(kocka);*/
 
 
 
@@ -93,14 +98,14 @@ light.addComponent(new Transform({
     translation: [3, 3, 3],
 }));
 light.addComponent(new Light({
-    ambient: 0.3,
+    ambient: 0.6,
 }));
-light.addComponent(new LinearAnimator(light, {
+/*light.addComponent(new LinearAnimator(light, {
     startPosition: [3, 3, 3],
     endPosition: [-3, -3, -3],
     duration: 1,
     loop: true,
-}));
+}));*/
 scene.addChild(light);
 
 const floor = new Node();
