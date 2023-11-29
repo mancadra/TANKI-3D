@@ -29,6 +29,11 @@ import { JSONLoader } from './common/engine/loaders/JSONLoader.js';
 import { Controller } from './Controller.js';
 import { CevController } from './CevController.js';
 
+import {
+    calculateAxisAlignedBoundingBox,
+    mergeAxisAlignedBoundingBoxes,
+} from './common/engine/core/MeshUtils.js';
+import { Physics } from './Physics.js';
 //import { FirstPersonController } from './common/engine/controllers/FirstPersonController.js';
 
 
@@ -40,7 +45,6 @@ const gltfLoader = new GLTFLoader();
 await gltfLoader.load('common/models/tank.gltf');
 
 const scene = gltfLoader.loadScene(gltfLoader.defaultScene);
-
 
 /*camera.addComponent(new OrbitController(camera, document.body, {
     distance: 8,
@@ -54,6 +58,12 @@ const model = scene.find(node => node.getComponentOfType(Model));
 model.addComponent(new Controller(model, document.body, {
     distance: 2,
 }));
+const telo = gltfLoader.loadNode('telo');
+telo.isDynamic = true;
+telo.aabb = {
+    min: [-0.24, -0.2, -0.2],
+    max: [0.2, 0.2, 0.2],
+}
 
 const glava = gltfLoader.loadNode('glava');
 glava.addComponent(new CevController(glava, document.body));
@@ -75,14 +85,16 @@ glava.addChild(camera);
 const gltfLoader2 = new GLTFLoader();
 await gltfLoader2.load('common/models/cube.gltf');
 
-/*const kocka = gltfLoader2.loadNode('Cube');
-kocka.addComponent(new RotateAnimator(kocka, {
-    startRotation: [0, 0, 0, 1],
-    endRotation: [0.7071, 0, 0.7071, 0],
-    duration: 5,
-    loop: true,
-}));
-model.addChild(kocka);*/
+const kocka = gltfLoader2.loadNode('Cube');
+kocka.isStatic = true;
+// kocka.addComponent(new RotateAnimator(kocka, {
+//     startRotation: [0, 0, 0, 1],
+//     endRotation: [0.7071, 0, 0.7071, 0],
+//     duration: 5,
+//     loop: true,
+// }));
+// model.addChild(kocka);
+scene.addChild(kocka);
 
 
 
@@ -110,7 +122,7 @@ scene.addChild(light);
 
 const floor = new Node();
 floor.addComponent(new Transform({
-    scale: [10, 1, 10],
+    scale: [30, 1, 30],
 }));
 floor.addComponent(new Model({
     primitives: [
@@ -132,12 +144,25 @@ floor.addComponent(new Model({
 }));
 scene.addChild(floor);
 
+const physics = new Physics(scene);
+scene.traverse(node => {
+    const model = node.getComponentOfType(Model);
+    if (!model) {
+        return;
+    }
+
+    const boxes = model.primitives.map(primitive => calculateAxisAlignedBoundingBox(primitive.mesh));
+    node.aabb = mergeAxisAlignedBoundingBoxes(boxes);
+});
+
 function update(time, dt) {
     scene.traverse(node => {
         for (const component of node.components) {
             component.update?.(time, dt);
         }
     });
+
+    physics.update(time, dt);
 }
 
 function render() {
