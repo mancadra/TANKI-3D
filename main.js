@@ -179,9 +179,9 @@ new ResizeSystem({ canvas, resize }).start();
 new UpdateSystem({ update, render }).start();
 
 const gui = new GUI();
-const controller = camera.getComponentOfType(Controller);
+const controller = model.getComponentOfType(Controller);
 gui.add(controller, 'pointerSensitivity', 0.0001, 0.01);
-gui.add(controller, 'maxSpeed', 0, 10);
+gui.add(controller, 'maxSpeed', 0, 30);
 gui.add(controller, 'decay', 0, 1);
 gui.add(controller, 'acceleration', 1, 100);
 
