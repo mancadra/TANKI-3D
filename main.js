@@ -40,7 +40,14 @@ const gltfLoader = new GLTFLoader();
 await gltfLoader.load('common/models/tank.gltf');
 
 const scene = gltfLoader.loadScene(gltfLoader.defaultScene);
+console.log('Loaded GLTF Scene:', scene);
 
+/*
+const teren = new GLTFLoader();
+await teren.load('common/models/teren.gltf');
+
+const scena = teren.loadScene(teren.defaultScene);
+*/
 
 /*camera.addComponent(new OrbitController(camera, document.body, {
     distance: 8,
@@ -75,23 +82,32 @@ glava.addChild(camera);
 const gltfLoader2 = new GLTFLoader();
 await gltfLoader2.load('common/models/cube.gltf');
 
-/*const kocka = gltfLoader2.loadNode('Cube');
-kocka.addComponent(new RotateAnimator(kocka, {
-    startRotation: [0, 0, 0, 1],
-    endRotation: [0.7071, 0, 0.7071, 0],
-    duration: 5,
-    loop: true,
+const kocka = gltfLoader2.loadNode('Cube');
+model.addChild(kocka);
+
+
+const gltfLoader3 = new GLTFLoader();
+await gltfLoader3.load('common/models/teren.gltf');
+
+const tla = gltfLoader3.loadNode('teren');
+tla.addComponent(new Transform({
+    position: [0, 0, 0], // Adjust the position as needed
+    rotation: [0, 0, 0, 1], // Adjust the rotation as needed
+    scale: [1, 1, 1], // Adjust the scale as needed
 }));
-model.addChild(kocka);*/
+scene.addChild(tla);
+// Load the scene from the GLTF file
+/*const terenScene = gltfLoader3.loadScene(gltfLoader3.defaultScene);
 
-
-
-
-
-
-
-
-
+// Check if the scene is valid before proceeding
+if (terenScene) {
+    // Add the terenScene to your main scene
+    scene.addChild(terenScene);
+ 
+} else {
+    console.error('Error: Loaded teren scene is null.');
+}
+*/
 
 const light = new Node();
 light.addComponent(new Transform({
@@ -100,12 +116,6 @@ light.addComponent(new Transform({
 light.addComponent(new Light({
     ambient: 0.6,
 }));
-/*light.addComponent(new LinearAnimator(light, {
-    startPosition: [3, 3, 3],
-    endPosition: [-3, -3, -3],
-    duration: 1,
-    loop: true,
-}));*/
 scene.addChild(light);
 
 const floor = new Node();
@@ -118,7 +128,7 @@ floor.addComponent(new Model({
             mesh: await new JSONLoader().loadMesh('./common/models/floor.json'),
             material: new Material({
                 baseTexture: new Texture({
-                    image: await new ImageLoader().load('./common/images/grass.png'),
+                    image: await new ImageLoader().load('./common/images/h1.png'),
                     sampler: new Sampler({
                         minFilter: 'nearest',
                         magFilter: 'nearest',
