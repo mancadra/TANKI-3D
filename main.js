@@ -148,12 +148,18 @@ scene.addChild(floor);
 
 //FIRING A BULLET
 const bullet = gltfLoader.loadNode('bullet');
+bullet.isDynamic = true;
+bullet.aabb = {
+    min: [-0.24, -0.2, -0.2],
+    max: [0.2, 0.2, 0.2],
+}
 scene.removeChild(bullet);
+
 window.addEventListener('keydown', (event) => {
     if (event.key == " ") {
         //const bullet = gltfLoader.loadNode('bullet'); // na  začetku bomo iz scene odstranili bullet
         glava.addChild(bullet);
-        bullet.addComponent(new Bullet(bullet, glava, document.body));
+        bullet.addComponent(new Bullet(bullet, glava, scene,  document.body));
     }
 });
 const poz = bullet.getComponentOfType(Transform);
@@ -170,6 +176,7 @@ scene.traverse(node => {
     node.aabb = mergeAxisAlignedBoundingBoxes(boxes);
 });
 
+
 function update(time, dt) {
     scene.traverse(node => {
         for (const component of node.components) {
@@ -178,13 +185,21 @@ function update(time, dt) {
     });
 
     physics.update(time, dt);
-    if (poz.translation[1] < -10) {
-        glava.removeChild(bullet);
+    scene.traverse(other => {
+        if (other !== bullet && other.isStatic) {
+           const isColliding = physics.resolveCollision(bullet, other);
+           if (isColliding) {
+            removeBullet(bullet, glava);
+           }
+        }
+    });
+}
 
-        //ponstavimo pozicijo bulleta
-        vec3.set(poz.translation, 0, 0, 0); // Reset position
-        glava.addChild(bullet);
-    }
+function removeBullet(bullet, glava) {
+    glava.removeChild(bullet);
+    //ponstavimo pozicijo bulleta
+    vec3.set(poz.translation, 0, 0, 0); // Reset position
+    glava.addChild(bullet);
 }
 
 function render() {

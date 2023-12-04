@@ -2,7 +2,7 @@ import { vec3, mat4 } from './lib/gl-matrix-module.js';
 import { getGlobalModelMatrix } from './common/engine/core/SceneUtils.js';
 import { Transform } from './common/engine/core.js';
 
-export class Physics {
+export class BulletCollision {
 
     constructor(scene) {
         this.scene = scene;
@@ -64,44 +64,7 @@ export class Physics {
         if (!isColliding) {
             return;
         }
-        // Move node A minimally to avoid collision.
-        const diffa = vec3.sub(vec3.create(), bBox.max, aBox.min);
-        const diffb = vec3.sub(vec3.create(), aBox.max, bBox.min);
-
-        let minDiff = Infinity;
-        let minDirection = [0, 0, 0];
-        if (diffa[0] >= 0 && diffa[0] < minDiff) {
-            minDiff = diffa[0];
-            minDirection = [minDiff, 0, 0];
-        }
-        if (diffa[1] >= 0 && diffa[1] < minDiff) {
-            minDiff = diffa[1];
-            minDirection = [0, minDiff, 0];
-        }
-        if (diffa[2] >= 0 && diffa[2] < minDiff) {
-            minDiff = diffa[2];
-            minDirection = [0, 0, minDiff];
-        }
-        if (diffb[0] >= 0 && diffb[0] < minDiff) {
-            minDiff = diffb[0];
-            minDirection = [-minDiff, 0, 0];
-        }
-        if (diffb[1] >= 0 && diffb[1] < minDiff) {
-            minDiff = diffb[1];
-            minDirection = [0, -minDiff, 0];
-        }
-        if (diffb[2] >= 0 && diffb[2] < minDiff) {
-            minDiff = diffb[2];
-            minDirection = [0, 0, -minDiff];
-        }
-
-        const transform = a.getComponentOfType(Transform);
-        if (!transform) {
-            return;
-        }
-
-        vec3.add(transform.translation, transform.translation, minDirection);
-       return true;
+ 
     }
 
 }

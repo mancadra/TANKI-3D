@@ -13,7 +13,7 @@ import {
 
 
 export class Bullet {
-    constructor(node, glava, domElement, {
+    constructor(node, glava, scene,  domElement, {
         bulletSpeed = 50, // initial bullet speed at
         velocity = [0, 0, bulletSpeed],
         gravity = 9.81,
@@ -30,16 +30,6 @@ export class Bullet {
     }
 
     update(t, dt) {
-        // // pozicija je transform
-        // // hitrost je neka dodatna komponenta
-        // this.bulletSpeed = this.bulletSpeed - this.resistance * dt;
-       
-        // // Update translation based on velocity.
-        // const transform = this.node.getComponentOfType(Transform);
-        // if (!transform) {
-        //     return;
-        // }
-        // vec3.scaleAndAdd(transform.translation, transform.translation, this.bulletSpeed, dt);
         const accelerationDueToGravity = [0, -this.gravity, 0];
         const resistanceForce = vec3.scaleAndAdd([0, 0, 0], [0, 0, 0], this.velocity, -this.resistance);
     
@@ -55,14 +45,25 @@ export class Bullet {
         vec3.scaleAndAdd(transform.translation, transform.translation, this.velocity, dt);
        // console.log(transform.translation[1]);
         if (transform.translation[1] < -10) { 
-            this.velocity = [0, 0, this.bulletSpeed];
+             this.removeBullet(transform);
+            /*this.velocity = [0, 0, this.bulletSpeed];
             this.glava.removeChild(this.node);
 
             //ponastavimo pozicijo bulleta
             vec3.set(transform.translation, 0, 0, 0);
-            this.glava.addChild(this.node);
+            this.glava.addChild(this.node);*/
         }
     
+    }
+
+    removeBullet(transform) {
+        this.velocity = [0, 0, this.bulletSpeed];
+        //this.glava.removeChild(this.node);
+
+        //ponastavimo pozicijo bulleta
+        vec3.set(transform.translation, 0, 0, 0);
+        scene.removeChild/this.node;
+        //this.glava.addChild(this.node);
     }
 }
 
@@ -78,3 +79,11 @@ hitrost se bo spreminjala hitrost' = hitrost + pospešek * spremembaCasa
 
 
 */
+
+
+
+// 1. Prvi iztrelek je drugačen ker imamo v blenderju kroglo izrisano pred cevjo, tu pa jo ponastavimo v izhodišče koordinatnega sistema
+
+// 2. Ko premaknemo tank med tem ko smo že izstrelili se hkrati premakne tudi izstreljini metek(je še vedno child glave)
+
+// 3. Krogle se če premaknemo naklon cevi, izbrišejo prekmalu
