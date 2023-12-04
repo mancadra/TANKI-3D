@@ -34,6 +34,8 @@ import {
     mergeAxisAlignedBoundingBoxes,
 } from './common/engine/core/MeshUtils.js';
 import { Physics } from './Physics.js';
+
+import { Bullet } from './Bullet.js';
 //import { FirstPersonController } from './common/engine/controllers/FirstPersonController.js';
 
 
@@ -42,10 +44,9 @@ const renderer = new Renderer(canvas);
 await renderer.initialize();
 
 const gltfLoader = new GLTFLoader();
-await gltfLoader.load('common/models/tank.gltf');
+await gltfLoader.load('common/models/tank3.gltf');
 
 const scene = gltfLoader.loadScene(gltfLoader.defaultScene);
-
 /*camera.addComponent(new OrbitController(camera, document.body, {
     distance: 8,
 }));*/
@@ -78,7 +79,6 @@ const camera = scene.find(node => node.getComponentOfType(Camera));
 /*camera.addComponent(new Controller(camera, document.body, {
     distance: 20,
 }));*/
-scene.addChild(camera);
 glava.addChild(camera);
 
 
@@ -120,6 +120,8 @@ light.addComponent(new Light({
 }));*/
 scene.addChild(light);
 
+
+// LOADING THE FLOOR
 const floor = new Node();
 floor.addComponent(new Transform({
     scale: [30, 1, 30],
@@ -144,6 +146,19 @@ floor.addComponent(new Model({
 }));
 scene.addChild(floor);
 
+//FIRING A BULLET
+const bullet = gltfLoader.loadNode('bullet');
+scene.removeChild(bullet);
+window.addEventListener('keydown', (event) => {
+    if (event.key == " ") {
+        //const bullet = gltfLoader.loadNode('bullet'); // na  začetku bomo iz scene odstranili bullet
+        glava.addChild(bullet);
+        bullet.addComponent(new Bullet(bullet, glava, document.body));
+    }
+});
+const poz = bullet.getComponentOfType(Transform);
+
+
 const physics = new Physics(scene);
 scene.traverse(node => {
     const model = node.getComponentOfType(Model);
@@ -163,12 +178,19 @@ function update(time, dt) {
     });
 
     physics.update(time, dt);
+    if (poz.translation[1] < -10) {
+        glava.removeChild(bullet);
+
+        //ponstavimo pozicijo bulleta
+        vec3.set(poz.translation, 0, 0, 0); // Reset position
+        glava.addChild(bullet);
+    }
 }
 
 function render() {
-    console.log('Before rendering model');
+    // console.log('Before rendering model');
     renderer.render(scene, camera);
-    console.log('After rendering model');
+    // console.log('After rendering model');
 }
 
 function resize({ displaySize: { width, height }}) {

@@ -55,19 +55,19 @@ export class Controller {
 
         const acc = vec3.create()
         if (this.keys['KeyW']) {
-            console.log("W pressed");
+            // console.log("W pressed");
             vec3.sub(acc, acc, forward);
         }
         if (this.keys['KeyS']) {
-            console.log("S pressed");
+            // console.log("S pressed");
             vec3.add(acc, acc, forward);
         }
         if (this.keys['KeyD']) {
-            console.log("D pressed");
+            // console.log("D pressed");
             vec3.sub(acc, acc, right);
         }
         if (this.keys['KeyA']) {
-            console.log("A pressed");
+            // console.log("A pressed");
             vec3.add(acc, acc, right);
         }
 
@@ -95,9 +95,6 @@ export class Controller {
             return;
         }
         vec3.scaleAndAdd(transform.translation, transform.translation, this.velocity, dt);
-
-
-        transform.translation = transform.translation;
     }
 
     keydownHandler(e) {

@@ -50,7 +50,7 @@ export class CevController {
 
         const transform = this.node.getComponentOfType(Transform);
         if (transform) {
-            console.log("PITCH: ", this.pitch); // MAX value pitcha je lahko 0.3 (če se premakne gpr gre v minus)
+            // console.log("PITCH: ", this.pitch); // MAX value pitcha je lahko 0.3 (če se premakne gpr gre v minus)
 
             // Update rotation based on the Euler angles.
             if (this.pitch > 0.3) this.pitch = 0.3;
