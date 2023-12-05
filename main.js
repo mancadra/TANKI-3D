@@ -87,14 +87,14 @@ model.addChild(kocka);
 
 
 const gltfLoader3 = new GLTFLoader();
-await gltfLoader3.load('common/models/teren.gltf');
+await gltfLoader3.load('common/models/teren2.gltf');
 
-const tla = gltfLoader3.loadNode('teren');
-tla.addComponent(new Transform({
-    position: [0, 0, 0], // Adjust the position as needed
-    rotation: [0, 0, 0, 1], // Adjust the rotation as needed
-    scale: [1, 1, 1], // Adjust the scale as needed
-}));
+const tla = gltfLoader3.loadNode('Plane');
+// tla.addComponent(new Transform({
+//     position: [0, 0, 0], // Adjust the position as needed
+//     rotation: [0, 0, 0, 1], // Adjust the rotation as needed
+//     scale: [1, 1, 1], // Adjust the scale as needed
+// }));
 scene.addChild(tla);
 // Load the scene from the GLTF file
 /*const terenScene = gltfLoader3.loadScene(gltfLoader3.defaultScene);
@@ -118,7 +118,7 @@ light.addComponent(new Light({
 }));
 scene.addChild(light);
 
-const floor = new Node();
+/*const floor = new Node();
 floor.addComponent(new Transform({
     scale: [10, 1, 10],
 }));
@@ -140,7 +140,7 @@ floor.addComponent(new Model({
         }),
     ],
 }));
-scene.addChild(floor);
+scene.addChild(floor);*/
 
 function update(time, dt) {
     scene.traverse(node => {

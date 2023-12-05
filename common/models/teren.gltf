@@ -111,7 +111,7 @@
       "uri": "data:application/octet-stream;base64,AACAvwAAAAAAAIA/AACAPwAAAAAAAIA/AACAvwAAAAAAAIC/AACAPwAAAAAAAIC/AAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAIA/AACAPwAAAAAAAAAAAACAPwAAAAAAAAEAAwAAAAMAAgAAAAAA"
     }
   ],
-  /*"materials": [
+  "materials": [
     {
       "name": "colorMaterial",
       "pbrMetallicRoughness": {
@@ -120,5 +120,5 @@
       "alphaMode": "OPAQUE",
       "doubleSided": false
     }
-  ]*/
+  ]
 }
