@@ -38,7 +38,7 @@ light.addComponent(new Transform({
     translation: [3, 3, 3],
 }));
 light.addComponent(new Light({
-    ambient: 0.35,
+    ambient: 0.1,
 }));
 light.addComponent(new LinearAnimator(light, {
     startPosition: [3, 3, 3],

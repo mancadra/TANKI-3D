@@ -151,13 +151,15 @@ fn fragment(input : FragmentInput) -> FragmentOutput {
     let combinedColor = materialColor * (lambertFactor + ambientFactor);
 
 
+
+
     // Dot pattern
     let min_resolution = min(custom.u_resolution.x, custom.u_resolution.y);
     let light2Dposition = vec2(light.position[0],light.position[1]);
     let light_direction = vec3((light.position.xy - 0.5 * custom.u_resolution) / min_resolution, light.position.z);
     
     // Calculate the light diffusion factor
-    let df : f32 = diffuseFactor(input.normal, light_direction); //bo treba se dodati FrontFacing
+    let df : f32 = diffuseFactor(input.normal, L); //bo treba se dodati FrontFacing
     
     let pos = vec2(input.clipPosition.xy - 0.5 * custom.u_resolution);
 
@@ -165,20 +167,32 @@ fn fragment(input : FragmentInput) -> FragmentOutput {
     let pos_rotated = rotate(radians(20.0)) * pos; 
 
     // Define the grid
-    let grid_step : f32 = 8;
+    let grid_step : f32 = 16;
     let grid_pos = vec2(pos - grid_step * floor(pos / grid_step)); //preglej alternativo za mod()
 
 
     var surface_color : f32 = 1.0;
     surface_color -= circle(grid_pos, vec2f(grid_step / 2.0), 0.8 * grid_step * pow(1.0 - df,2.0));
-    surface_color = clamp(surface_color, 0.05, 1);
+    surface_color = clamp(surface_color, 0.1, 1);
 
-    let blendFactor = max(lambert, 0.2); // Ensures that shadows are not completely dark
     let dotColor = vec4(vec3(surface_color), 1.0);
 
-    // Combining material color with dot pattern
-    output.color = vec4f(vec3f(surface_color), 1.0); //* combinedColor;
-    //output.color = mix(combinedColor, dotColor, blendFactor);
+
+    //output.color = materialColor * (ambientFactor + dotColor);
+   //output.color = vec4f(vec3f(surface_color), 1.0) * materialColor;
+
+
+    // Determine if the dot pattern is closer to black
+    let isDotPatternBlack = dotColor.r < 0.1 && dotColor.g < 0.1 && dotColor.b < 0.1;
+
+    // Blend based on Lambert factor and dot pattern
+    
+    var finalColor = (dotColor + ambientFactor ) * materialColor; // Default to material color
+
+    
+
+    output.color = finalColor;
+    
 
     return output;
 }
