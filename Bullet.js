@@ -13,7 +13,7 @@ import {
 
 
 export class Bullet {
-    constructor(node, glava, scene,  domElement, {
+    constructor(node, glava, scene, domElement, {
         bulletSpeed = 50, // initial bullet speed at
         velocity = [0, 0, bulletSpeed],
         gravity = 9.81,
@@ -21,6 +21,7 @@ export class Bullet {
     } = {}) {
         this.node = node;
         this.glava = glava;
+        this.scene = scene;
         this.domElement = domElement;
        
         this.bulletSpeed = bulletSpeed;
@@ -62,7 +63,7 @@ export class Bullet {
 
         //ponastavimo pozicijo bulleta
         vec3.set(transform.translation, 0, 0, 0);
-        scene.removeChild/this.node;
+        this.scene.removeChild(this.node);
         //this.glava.addChild(this.node);
     }
 }

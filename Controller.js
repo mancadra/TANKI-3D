@@ -12,7 +12,8 @@ export class Controller {
         acceleration = 50, // pospešek
         maxSpeed = 30,
         decay = 0.99999,
-        pointerSensitivity = 0.002,
+        //pointerSensitivity = 0.002,
+        baseRotationSpeed = 0.006,
     } = {}) {
         this.node = node;
         this.domElement = domElement;
@@ -27,7 +28,8 @@ export class Controller {
         this.acceleration = acceleration;
         this.maxSpeed = maxSpeed;
         this.decay = decay;
-        this.pointerSensitivity = pointerSensitivity;
+        //this.pointerSensitivity = pointerSensitivity;
+        this.baseRotationSpeed = baseRotationSpeed;
 
         this.initHandlers();
     }
@@ -46,7 +48,8 @@ export class Controller {
 
     update(t, dt) {
         //console.log(dt, t);
-        
+        const rotation = quat.create();
+        const twopi = Math.PI * 2;   
 
         const cos = Math.cos(this.yaw);
         const sin = Math.sin(this.yaw);
@@ -64,11 +67,13 @@ export class Controller {
         }
         if (this.keys['KeyD']) {
             // console.log("D pressed");
-            vec3.sub(acc, acc, right);
+            //vec3.sub(acc, acc, right);
+            this.yaw -= 1 * this.baseRotationSpeed;
         }
         if (this.keys['KeyA']) {
             // console.log("A pressed");
-            vec3.add(acc, acc, right);
+            //vec3.add(acc, acc, right);
+            this.yaw += 1 * this.baseRotationSpeed;
         }
 
         vec3.scaleAndAdd(this.velocity, this.velocity, acc, dt * this.acceleration);
@@ -95,6 +100,11 @@ export class Controller {
             return;
         }
         vec3.scaleAndAdd(transform.translation, transform.translation, this.velocity, dt);
+
+        this.yaw = ((this.yaw % twopi) + twopi) % twopi;
+        quat.rotateY(rotation, rotation, this.yaw);
+        //quat.rotateX(rotation, rotation, this.pitch);
+        transform.rotation = rotation;
     }
 
     keydownHandler(e) {

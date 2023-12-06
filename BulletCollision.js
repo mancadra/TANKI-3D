@@ -4,18 +4,16 @@ import { Transform } from './common/engine/core.js';
 
 export class BulletCollision {
 
-    constructor(scene) {
+    constructor(bullet, scene) {
+        this.bullet = bullet;
         this.scene = scene;
     }
 
     update(t, dt) {
-        this.scene.traverse(node => {
-            if (node.isDynamic) {
-                this.scene.traverse(other => {
-                    if (node !== other && other.isStatic) {
-                       this.resolveCollision(node, other);
-                    }
-                });
+        this.scene.traverse(other => {
+            if (this.bullet !== other && other.isStatic) {
+                const isColliding = this.resolveCollision(this.bullet, other);
+                if (isColliding) console.log("Collision!!!!!!!!!!");
             }
         });
     }
@@ -62,9 +60,9 @@ export class BulletCollision {
         // Check if there is collision.
         const isColliding = this.aabbIntersection(aBox, bBox);
         if (!isColliding) {
-            return;
+            return false;
         }
- 
+        return true;
     }
 
 }
