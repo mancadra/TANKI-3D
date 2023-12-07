@@ -28,6 +28,7 @@ import { JSONLoader } from './common/engine/loaders/JSONLoader.js';
 
 import { Controller } from './Controller.js';
 import { CevController } from './CevController.js';
+//import { mapRenderer } from './mapRenderer.js';
 
 //import { FirstPersonController } from './common/engine/controllers/FirstPersonController.js';
 
@@ -41,6 +42,16 @@ await gltfLoader.load('common/models/tank.gltf');
 
 const scene = gltfLoader.loadScene(gltfLoader.defaultScene);
 console.log('Loaded GLTF Scene:', scene);
+
+
+/*
+const teren = new GLTFLoader();
+await teren.load('common/models/okolje.gltf');
+
+const tla = teren.loadNode('Cube');
+scene.addChild(tla);
+*/
+
 
 /*
 const teren = new GLTFLoader();
@@ -62,6 +73,8 @@ model.addComponent(new Controller(model, document.body, {
     distance: 2,
 }));
 
+//model.addComponent(new mapRenderer(model,document.body));   //dodala komponento y za visino tanka
+
 const glava = gltfLoader.loadNode('glava');
 glava.addComponent(new CevController(glava, document.body));
 /*model.addComponent(new RotateAnimator(model, {
@@ -70,6 +83,8 @@ glava.addComponent(new CevController(glava, document.body));
     duration: 5,
     loop: true,
 }));*/
+
+
 
 const camera = scene.find(node => node.getComponentOfType(Camera));
 /*camera.addComponent(new Controller(camera, document.body, {
@@ -85,7 +100,7 @@ await gltfLoader2.load('common/models/cube.gltf');
 const kocka = gltfLoader2.loadNode('Cube');
 model.addChild(kocka);
 
-
+/*
 const gltfLoader3 = new GLTFLoader();
 await gltfLoader3.load('common/models/teren2.gltf');
 
@@ -95,7 +110,7 @@ const tla = gltfLoader3.loadNode('Plane');
 //     rotation: [0, 0, 0, 1], // Adjust the rotation as needed
 //     scale: [1, 1, 1], // Adjust the scale as needed
 // }));
-scene.addChild(tla);
+scene.addChild(tla);*/
 // Load the scene from the GLTF file
 /*const terenScene = gltfLoader3.loadScene(gltfLoader3.defaultScene);
 

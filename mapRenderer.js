@@ -1,138 +1,134 @@
-/*function generateVerticesFromHeightmap(imagePath, minHeight, maxHeight) {
-    const image = new Image();
-    image.src = imagePath;
-  
-    return new Promise((resolve, reject) => {
-      image.onload = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = image.width;
-        canvas.height = image.height;
-  
-        const context = canvas.getContext('2d');
-        context.drawImage(image, 0, 0, image.width, image.height);
-  
-        const imageData = context.getImageData(0, 0, image.width, image.height).data;
+/*import { Transform } from './common/engine/core/Transform.js';
+import { ImageLoader } from './common/engine/loaders/ImageLoader.js';
+
+export class mapRenderer {
+
+    constructor(node, domElement, {
+        width = 100, // Adjust the width of the grid
+        height = 100, // Adjust the height of the grid
+        scale = 0.1, // Adjust the scale of the terrain
+    } = {}) {
+        this.node = node;
+        this.domElement = domElement;
+        //this.image = image;
+
+        this.width = width;
+        this.height = height;
+        this.scale = scale;
+
+        // Corrected: Call the method to load the grayscale image
+        this.loadGrayscaleImage();
+    }
+    
+        
+        async loadGrayscaleImage() {
+            // Corrected: Fetch the image using the correct path
+            const bitmap = new ImageLoader();
+            await bitmap.load('./common/images/h1.png');
+    
+            // Create a canvas element
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+    
+            // Set the canvas size to match the image size
+            canvas.width = bitmap.width;
+            canvas.height = bitmap.height;
+    
+            // Draw the ImageBitmap onto the canvas
+            context.drawImage(bitmap, 0, 0);
+    
+            // Get the pixel data
+            const imageData = context.getImageData(0, 0, canvas.width, canvas.height).data;
+    
+            // Now 'imageData' is a one-dimensional array containing grayscale values for each pixel
+            console.log(imageData);
+            //return imageData;
+        }
+     
+        
+
+    // Function to generate vertices and indices
+    generateTerrainVerticesAndIndices() {
         const vertices = [];
-  
-        for (let y = 0; y < image.height; y++) {
-          for (let x = 0; x < image.width; x++) {
-            const index = y * image.width + x;
-            const grayscaleValue = imageData[index] / 255;
-            const normalizedHeight = grayscaleValue * (maxHeight - minHeight) + minHeight;
-  
-            // Normalize coordinates to range [-1, 1]
-            const normalizedX = (x / image.width) * 2 - 1;
-            const normalizedY = (y / image.height) * 2 - 1;
-  
-            // Add the vertex coordinates to the array
-            vertices.push(normalizedX, normalizedHeight, normalizedY);
-          }
+        const indices = [];
+
+        for (let i = 0; i < width; i++) {
+            for (let j = 0; j < height; j++) {
+                // Calculate the x, y, and z coordinates based on the image data
+                const x = i * scale;
+                const y = getHeightFromImage(i, j); // Implement this function based on your image data
+                const z = j * scale;
+
+                // Add the vertex coordinates to the array
+                vertices.push(x, y, z);
+            }
         }
-  
-        resolve(vertices);
-      };
-  
-      image.onerror = (error) => {
-        reject(error);
-      };
-    });
-  }
-  
-  // Example usage:
-  const minHeight = 0; // Replace with the minimum height value in your heightmap
-  const maxHeight = 100; // Replace with the maximum height value in your heightmap
-  const imagePath = './common/images/h1.png'; 
 
-  generateVerticesFromHeightmap(imagePath, minHeight, maxHeight)
-    .then((vertices) => {
-      console.log('Vertices:', vertices);
-      // Now you can use the vertices in your WebGL rendering code
-    })
-    .catch((error) => {
-      console.error('Error generating vertices from heightmap:', error);
-    });*/
+        // Generate indices to form triangles
+        for (let i = 0; i < width - 1; i++) {
+            for (let j = 0; j < height - 1; j++) {
+                const topLeft = j + i * height;
+                const topRight = j + (i + 1) * height;
+                const bottomLeft = j + 1 + i * height;
+                const bottomRight = j + 1 + (i + 1) * height;
 
-    // Constants
-const width = 100; // Adjust the width of the grid
-const height = 100; // Adjust the height of the grid
-const scale = 0.1; // Adjust the scale of the terrain
-
-// Function to generate vertices and indices
-function generateTerrainVerticesAndIndices() {
-    const vertices = [];
-    const indices = [];
-
-    for (let i = 0; i < width; i++) {
-        for (let j = 0; j < height; j++) {
-            // Calculate the x, y, and z coordinates based on the image data
-            const x = i * scale;
-            const y = getHeightFromImage(i, j); // Implement this function based on your image data
-            const z = j * scale;
-
-            // Add the vertex coordinates to the array
-            vertices.push(x, y, z);
+                // Add indices to form two triangles for each grid cell
+                indices.push(topLeft, topRight, bottomLeft);
+                indices.push(topRight, bottomRight, bottomLeft);
+            }
         }
+
+        return { vertices, indices };
     }
 
-    // Generate indices to form triangles
-    for (let i = 0; i < width - 1; i++) {
-        for (let j = 0; j < height - 1; j++) {
-            const topLeft = j + i * height;
-            const topRight = j + (i + 1) * height;
-            const bottomLeft = j + 1 + i * height;
-            const bottomRight = j + 1 + (i + 1) * height;
-
-            // Add indices to form two triangles for each grid cell
-            indices.push(topLeft, topRight, bottomLeft);
-            indices.push(topRight, bottomRight, bottomLeft);
-        }
+    // Function to get the height value from your image data
+    getHeightFromImage(x, y) {
+        return imageData[x + y * width] / 255.0; 
     }
 
-    return { vertices, indices };
-}
+    
 
-// Function to get the height value from your image data
-function getHeightFromImage(x, y) {
-    // Implement this function based on your image data
-    // You may need to access the pixel data from your heightmap image
-    // and convert it to a height value
-    return imageData[x + y * width] / 255.0;
-    /*
-    const index = (y * imageData.width + x) * 4; // Assuming 4 channels (RGBA) per pixel
-    const grayscaleValue = imageData.data[index];
-    return grayscaleValue / 255.0;*/
+    getInterpolatedHeight(x, y, terrainWidth, terrainHeight, heights) {
+        // Calculate grid coordinates
+        const xCoord = Math.floor(x / scale);
+        const yCoord = Math.floor(y / scale);
 
-    // For now, return a placeholder value
-    return 0;
-}
+        // Calculate local position within the grid
+        const localX = (x / scale) - xCoord;
+        const localY = (y / scale) - yCoord;
 
-// Call the function to get the vertices and indices
-const { vertices, indices } = generateTerrainVerticesAndIndices();
+        // Get heights of the four corners of the cell
+        const topLeft = heights[yCoord * terrainWidth + xCoord];
+        const topRight = heights[yCoord * terrainWidth + (xCoord + 1)];
+        const bottomLeft = heights[(yCoord + 1) * terrainWidth + xCoord];
+        const bottomRight = heights[(yCoord + 1) * terrainWidth + (xCoord + 1)];
 
-// Output the results to the console
-console.log('Vertices:', vertices);
-console.log('Indices:', indices);
+        // Interpolate height using bilinear interpolation
+        const topInterpolation = (1 - localX) * topLeft + localX * topRight;
+        const bottomInterpolation = (1 - localX) * bottomLeft + localX * bottomRight;
 
+        return (1 - localY) * topInterpolation + localY * bottomInterpolation;
+    }
 
 
-function getInterpolatedHeight(x, y, terrainWidth, terrainHeight, heights) {
-    // Calculate grid coordinates
-    const xCoord = Math.floor(x / scale);
-    const yCoord = Math.floor(y / scale);
-
-    // Calculate local position within the grid
-    const localX = (x / scale) - xCoord;
-    const localY = (y / scale) - yCoord;
-
-    // Get heights of the four corners of the cell
-    const topLeft = heights[yCoord * terrainWidth + xCoord];
-    const topRight = heights[yCoord * terrainWidth + (xCoord + 1)];
-    const bottomLeft = heights[(yCoord + 1) * terrainWidth + xCoord];
-    const bottomRight = heights[(yCoord + 1) * terrainWidth + (xCoord + 1)];
-
-    // Interpolate height using bilinear interpolation
-    const topInterpolation = (1 - localX) * topLeft + localX * topRight;
-    const bottomInterpolation = (1 - localX) * bottomLeft + localX * bottomRight;
-
-    return (1 - localY) * topInterpolation + localY * bottomInterpolation;
-}
+    update(t, dt) {
+        const transform = this.node.getComponentOfType(Transform);
+        if (!transform) {
+            return;
+        }
+    
+        // Get the current position of the tank
+        const currentX = transform.translation[0];
+        const currentZ = transform.translation[2];
+    
+        // Use the getInterpolatedHeight function to get the new height at the current position
+        const newHeight = this.getInterpolatedHeight(currentX, currentZ, this.width, this.height, imageData);
+    
+        // Update the tank's y-coordinate to the new height
+        transform.translation[1] = newHeight;
+    
+        // Apply the updated transformation
+        transform.translation = transform.translation;
+    }
+    
+}*/
