@@ -8,6 +8,7 @@ import { RotateAnimator } from './common/engine/animators/RotateAnimator.js';
 import { LinearAnimator } from './common/engine/animators/LinearAnimator.js';
 
 import { StartUI } from './StartUI.js';
+import { GameUI } from './GameUI.js';
 
 import {
     Camera,
@@ -24,11 +25,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create and show the start UI
     const startUI = new StartUI(startGame);
     startUI.show();
+
 });
 
 
 async function startGame() {
     // Logic to start the game, such as initializing the Renderer and starting the game loop
+
+
     const canvas = document.querySelector('canvas');
 
     const renderer = new Renderer(canvas);
@@ -63,32 +67,40 @@ async function startGame() {
 
 
     let startTime = Date.now();
-let frameCount = 0;
-let u_resolution = [0, 0];
+    let frameCount = 0;
+    let u_resolution = [0, 0];
 
-function update(time, dt) {
-    scene.traverse(node => {
-        for (const component of node.components) {
-            component.update?.(time, dt);
-        }
-    });
-
+    ////GameUI
+    const gameUI = new GameUI();
+    // Example: Update sections
+    gameUI.updateSection('Health', '100%');
+    gameUI.updateSection('Gas', 'Full');
+    gameUI.updateSection('Power', 'High')
     
-}
+    
+    
+    function update(time, dt) {
+        scene.traverse(node => {
+            for (const component of node.components) {
+                component.update?.(time, dt);
+            }
+        }); 
+    }
 
-function render() {
-    let elapsedTime = (Date.now() - startTime) / 1000; // seconds
-    frameCount = frameCount +1;
-    renderer.render(scene, camera, u_resolution, elapsedTime, frameCount);
-}
+    function render() {
+        let elapsedTime = (Date.now() - startTime) / 1000; // seconds
+        frameCount = frameCount +1;
+        renderer.render(scene, camera, u_resolution, elapsedTime, frameCount);
+    }
 
-function resize({ displaySize: { width, height }}) {
-    camera.getComponentOfType(Camera).aspect = width / height;
-    u_resolution = [width, height];
-}
+    function resize({ displaySize: { width, height }}) {
+        camera.getComponentOfType(Camera).aspect = width / height;
+        u_resolution = [width, height];
+    }
 
-new ResizeSystem({ canvas, resize }).start();
-new UpdateSystem({ update, render }).start();
+    new ResizeSystem({ canvas, resize }).start();
+    new UpdateSystem({ update, render }).start();
+
 
 
 }
