@@ -28,8 +28,9 @@ import {
     mergeAxisAlignedBoundingBoxes,
 } from './common/engine/core/MeshUtils.js';
 import { Physics } from './Physics.js';
-
+import { CreateBullet } from './CreateBullet.js';
 import { SetStaticDynamic } from './SetStaticDynamic.js';
+import { BulletCollision } from './BulletCollision.js';
 
 const canvas = document.querySelector('canvas');
 const renderer = new Renderer(canvas);
@@ -53,12 +54,15 @@ tank.addComponent(new Controller(tank, document.body, {
     distance: 2,
 }));
 const glava = gltfLoader.loadNode('glava');
-glava.addComponent(new CevController(glava, document.body));
+const top_glava = gltfLoader.loadNode('top_glava');
+glava.addComponent(new CevController(glava, top_glava, document.body));
 const camera = scene.find(node => node.getComponentOfType(Camera));
 glava.addChild(camera);
 
 const bullet = gltfLoader.loadNode('Sphere');
 scene.removeChild(bullet);
+//bullet.addComponent(new CreateBullet(gltfLoader, top_glava, scene));
+
 
 const light = new Node();
 light.addComponent(new Transform({
@@ -70,6 +74,7 @@ light.addComponent(new Light({
 scene.addChild(light);
 
 const physics = new Physics(scene);
+
 scene.traverse(node => {
     const model = node.getComponentOfType(Model);
     if (!model) {
@@ -81,14 +86,30 @@ scene.traverse(node => {
 });
 
 
+//const cB = new CreateBullet(gltfLoader, top_glava, scene);
+let trk = { // naredimo object
+    boolTrk: false
+}
+
+let nrTrk = 0;
+
+CreateBullet(gltfLoader, top_glava, scene, trk);
+
 function update(time, dt) {
     scene.traverse(node => {
         for (const component of node.components) {
             component.update?.(time, dt);
+            if (trk.boolTrk == true) {
+                nrTrk++;
+                console.log("WOOOOOO", nrTrk);
+            }
+            trk.boolTrk = false;
         }
     });
-
     physics.update(time, dt);
+    //cB.update(time, dt);
+    //createBullet(bullet, top_glava, scene);
+    
 }
 
 function render() {
@@ -105,7 +126,7 @@ new UpdateSystem({ update, render }).start();
 const gui = new GUI();
 const controller = tank.getComponentOfType(Controller);
 gui.add(controller, 'baseRotationSpeed', 0.0001, 0.01);
-gui.add(controller, 'maxSpeed', 0, 30);
+gui.add(controller, 'maxSpeed', 0, 200);
 gui.add(controller, 'decay', 0, 1);
 gui.add(controller, 'acceleration', 1, 100);
 

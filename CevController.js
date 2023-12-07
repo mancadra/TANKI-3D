@@ -4,7 +4,7 @@ import { Transform } from './common/engine/core/Transform.js';
 
 export class CevController {
 
-    constructor(node, domElement, {
+    constructor(node, top_glava, domElement, {
         pitch = 0,
         yaw = 0,
         velocity = [0, 0, 0],
@@ -14,6 +14,7 @@ export class CevController {
         pointerSensitivity = 0.002,
     } = {}) {
         this.node = node;
+        this.top_glava = top_glava;
         this.domElement = domElement;
 
         this.keys = {};
@@ -51,7 +52,7 @@ export class CevController {
         const transform = this.node.getComponentOfType(Transform);
         if (transform) {
             //console.log("PITCH: ", this.pitch); // MAX value pitcha je lahko 0.3 (če se premakne gpr gre v minus)
-
+           
             // Update rotation based on the Euler angles.
             if (this.pitch > 0.3) this.pitch = 0.3;
             if (this.pitch < -0.296) this.pitch = -0.296;

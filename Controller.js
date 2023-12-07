@@ -10,7 +10,7 @@ export class Controller {
         yaw = 0, // nihanje
         velocity = [0, 0, 0], // hitrost
         acceleration = 50, // pospešek
-        maxSpeed = 30,
+        maxSpeed = 200,
         decay = 0.99999,
         //pointerSensitivity = 0.002,
         baseRotationSpeed = 0.006,
