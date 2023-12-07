@@ -49,7 +49,7 @@ export class Renderer extends BaseRenderer {
     async initialize() {
         await super.initialize();
 
-        const code = await fetch(new URL('shader.wgsl', import.meta.url))
+        const code = await fetch(new URL('shaderDOT.wgsl', import.meta.url))
             .then(response => response.text());
         const module = this.device.createShaderModule({ code });
 
@@ -134,18 +134,25 @@ export class Renderer extends BaseRenderer {
         }
 
         const lightUniformBuffer = this.device.createBuffer({
-            size: 16,
+            size: 16 + 24,
             usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+        });
+
+         // Check and prepare customUniformBuffer
+         const customUniformBuffer = this.device.createBuffer({
+            size: 24, // Size of customUniforms struct
+            usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST | GPUBufferUsage.COPY_SRC,
         });
 
         const lightBindGroup = this.device.createBindGroup({
             layout: this.pipeline.getBindGroupLayout(3),
             entries: [
                 { binding: 0, resource: { buffer: lightUniformBuffer } },
+                { binding: 1, resource: { buffer: customUniformBuffer } },
             ],
         });
 
-        const gpuObjects = { lightUniformBuffer, lightBindGroup };
+        const gpuObjects = { lightUniformBuffer, lightBindGroup, customUniformBuffer};
         this.gpuObjects.set(light, gpuObjects);
         return gpuObjects;
     }
@@ -177,7 +184,68 @@ export class Renderer extends BaseRenderer {
         return gpuObjects;
     }
 
-    render(scene, camera) {
+
+    setUniform(u_resolution, u_time, u_frame, buffer) {
+        // Create or get the buffer for customUniforms
+        let customUniformBuffer = buffer;
+
+
+        let converted_u_resolution = this.logAndConvertData(u_resolution, 'vec2f', 8);
+        let converted_u_time = this.logAndConvertData(u_time, 'f32', 4);
+        let converted_u_frame = this.logAndConvertData(u_frame, 'f32', 4);
+       
+        // Update the buffer with new data
+        //this.device.queue.writeBuffer(customUniformBuffer, 0, new Float32Array([...u_resolution, ...u_mouse, u_time, u_frame]));
+        this.device.queue.writeBuffer(customUniformBuffer, 0, converted_u_resolution);
+        this.device.queue.writeBuffer(customUniformBuffer, 16, converted_u_time);
+        this.device.queue.writeBuffer(customUniformBuffer, 20, converted_u_frame);
+    
+    }
+
+    logAndConvertData(data, expectedType, expectedByteSize) {
+        //console.log(`Data: ${data}, Type: ${typeof data}, Expected Type: ${expectedType}, Size: ${expectedByteSize} bytes`);
+        if (expectedType === 'vec2f' && expectedByteSize === 8) {
+            return new Float32Array([data[0], data[1]]);
+        } else if (expectedType === 'f32' && expectedByteSize === 4) {
+            return new Float32Array([data]);
+        } else {
+            console.error(`Unexpected data type or byte size. Data: ${data}, Type: ${typeof data}`);
+            return null;
+        }
+    }
+
+    ///debuging cutsom uniforms
+    async logUniforms(buffer) {
+        let customUniformBuffer = buffer;
+        if (!customUniformBuffer) {
+            console.error("customUniformBuffer is not initialized.");
+            return;
+        }
+        const readbackBuffer = this.device.createBuffer({
+            size: 24, // Size of the buffer to read back
+            usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ
+        });
+    
+        // Copy the data from the uniform buffer to the readback buffer
+        const commandEncoder = this.device.createCommandEncoder();
+        commandEncoder.copyBufferToBuffer(customUniformBuffer, 0, readbackBuffer, 0, 24);
+        this.device.queue.submit([commandEncoder.finish()]);
+    
+        // Wait for the GPU to finish and map the buffer
+        await readbackBuffer.mapAsync(GPUMapMode.READ);
+        const arrayBuffer = readbackBuffer.getMappedRange();
+        const data = new Float32Array(arrayBuffer);
+    
+        // Log the data
+        console.log("Uniforms from GPU:", data);
+    
+        // Cleanup
+        readbackBuffer.unmap();
+    }
+    
+
+
+    render(scene, camera, u_resolution, u_time, u_frame) {
         if (this.depthTexture.width !== this.canvas.width || this.depthTexture.height !== this.canvas.height) {
             this.recreateDepthTexture();
         }
@@ -213,10 +281,11 @@ export class Renderer extends BaseRenderer {
         const lightComponent = light.getComponentOfType(Light);
         const lightMatrix = getGlobalModelMatrix(light);
         const lightPosition = mat4.getTranslation(vec3.create(), lightMatrix);
-        const { lightUniformBuffer, lightBindGroup } = this.prepareLight(lightComponent);
+        const { lightUniformBuffer, lightBindGroup,customUniformBuffer} = this.prepareLight(lightComponent);
         this.device.queue.writeBuffer(lightUniformBuffer, 0, lightPosition);
         this.device.queue.writeBuffer(lightUniformBuffer, 12,
             new Float32Array([lightComponent.ambient]));
+        this.setUniform(u_resolution, u_time, u_frame, customUniformBuffer);
         this.renderPass.setBindGroup(3, lightBindGroup);
 
         this.renderNode(scene);

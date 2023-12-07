@@ -125,7 +125,7 @@ async function startGame() {
     gameUI.updateSection('Gas', 'Full');
     gameUI.updateSection('Power', 'High')
 
-    
+
 
     function update(time, dt) {
         scene.traverse(node => {
@@ -145,11 +145,14 @@ async function startGame() {
     }
 
     function render() {
-        renderer.render(scene, camera);
+        let elapsedTime = (Date.now() - startTime) / 1000; // seconds
+        frameCount = frameCount +1;
+        renderer.render(scene, camera,u_resolution, elapsedTime, frameCount);
     }
 
     function resize({ displaySize: { width, height }}) {
         camera.getComponentOfType(Camera).aspect = width / height;
+        u_resolution = [width, height];
     }
 
     new ResizeSystem({ canvas, resize }).start();
