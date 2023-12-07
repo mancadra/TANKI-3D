@@ -33,7 +33,7 @@ import { SetStaticDynamic } from './SetStaticDynamic.js';
 import { BulletCollision } from './BulletCollision.js';
 
 import { StartUI } from '/StartUI.js';
-//import { GameUI } from './GameUI.js';
+import { GameUI } from './GameUI.js';
 
 
 
@@ -109,6 +109,23 @@ async function startGame() {
     let nrTrk = 0;
 
     CreateBullet(gltfLoader, top_glava, scene, trk);
+
+
+
+    //DOT_Shader spremenljivke
+    let startTime = Date.now();
+    let frameCount = 0;
+    let u_resolution = [0, 0];
+
+    ////GameUI
+    const gameUI = new GameUI();
+
+    // Example: Update sections
+    gameUI.updateSection('Health', '100%');
+    gameUI.updateSection('Gas', 'Full');
+    gameUI.updateSection('Power', 'High')
+
+    
 
     function update(time, dt) {
         scene.traverse(node => {

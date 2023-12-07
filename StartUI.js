@@ -22,7 +22,7 @@ export class StartUI {
 
         // Title
         const title = document.createElement('h1');
-        title.textContent = 'My WebGPU Game';
+        title.textContent = 'Tanks 3D-ish ;)';
         titleScreen.appendChild(title);
 
         // Start button
