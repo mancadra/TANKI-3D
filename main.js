@@ -20,6 +20,8 @@ import {
 import { Renderer } from './Renderer.js';
 import { Light } from './Light.js';
 
+import { SunLight } from './light_sun.js';
+
 import { Controller } from './Controller.js';
 import { CevController } from './CevController.js';
 
@@ -84,9 +86,15 @@ async function startGame() {
         translation: [3, 3, 3],
     }));
     light.addComponent(new Light({
-        ambient: 0.7,
+        ambient: 0.5,
     }));
     scene.addChild(light);
+
+    
+    //sun
+    //const sunLightPosition = [100, 100, 0]; // Adjust the position as needed
+   // const sunLight = new SunLight(scene, sunLightPosition, 0.5);
+   // scene.addChild(sunLight);
 
     const physics = new Physics(scene);
 
