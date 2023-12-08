@@ -86,7 +86,7 @@ async function startGame() {
         translation: [3, 3, 3],
     }));
     light.addComponent(new Light({
-        ambient: 0.5,
+        ambient: 0.7,
     }));
     scene.addChild(light);
 

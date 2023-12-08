@@ -17,7 +17,7 @@ export class BulletCollision {
                 if (isColliding) {
                     console.log("Collision!!!!!!!!!!");
                     this.removeBullet();
-                    if (other.name = "target") {
+                    if (other.name == "target") {
                         console.log("Tarča zadeta!!!");
                         this.scene.removeChild(other);
                         this.trk.boolTrk = true;
