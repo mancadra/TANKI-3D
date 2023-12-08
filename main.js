@@ -36,6 +36,7 @@ import { BulletCollision } from './BulletCollision.js';
 
 import { StartUI } from '/StartUI.js';
 import { GameUI } from './GameUI.js';
+import { EndUI } from './EndUI.js';
 
 
 
@@ -134,6 +135,10 @@ async function startGame() {
     gameUI.updateSection('Power', 'High')
 
 
+    ///EndUI
+    const endUI = new EndUI();
+
+
 
     function update(time, dt) {
         scene.traverse(node => {
@@ -155,6 +160,10 @@ async function startGame() {
     function render() {
         let elapsedTime = (Date.now() - startTime) / 1000; // seconds
         frameCount = frameCount +1;
+        if (frameCount >= 10000) {
+            endUI.show();
+        }
+        //console.log("Frame:" + frameCount);
         renderer.render(scene, camera,u_resolution, elapsedTime, frameCount);
     }
 

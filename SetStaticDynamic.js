@@ -23,4 +23,8 @@ export function SetStaticDynamic(gltfLoader) {
     const kocka = gltfLoader.loadNode('Cube');
     kocka.name = "target";
     kocka.isStatic = true;
+
+    const kocka_2 = gltfLoader.loadNode('Cube');
+
+
 }
