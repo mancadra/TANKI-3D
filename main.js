@@ -59,6 +59,7 @@ async function startGame() {
 
     const scene = gltfLoader.loadScene(gltfLoader.defaultScene);
     SetStaticDynamic(gltfLoader);
+    
 
 
     // TANK
