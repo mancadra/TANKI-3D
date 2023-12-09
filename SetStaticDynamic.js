@@ -20,12 +20,42 @@ export function SetStaticDynamic(gltfLoader) {
     const Tla = gltfLoader.loadNode('Tla');
     Tla.isStatic = true;
 
-    const kocka = gltfLoader.loadNode('Cube.001');
-    kocka.name = "target";
-    kocka.isStatic = true;
+    const tarca1 = gltfLoader.loadNode('Cube.001');
+    tarca1.name = "target";
+    tarca1.isStatic = true;
 
-    //const ograja = gltfLoader.loadNode('Ograja');
-    //ograja.isStatic = true;
+    const tarca2 = gltfLoader.loadNode('Cube.002');
+    tarca2.name = "target";
+    tarca2.isStatic = true;
+
+    const tarca3 = gltfLoader.loadNode('Cube.003');
+    tarca3.name = "target";
+    tarca3.isStatic = true;
+
+    const tarca4 = gltfLoader.loadNode('Cube.004');
+    tarca4.name = "target";
+    tarca4.isStatic = true;
+
+    const tarca5 = gltfLoader.loadNode('Cube.005');
+    tarca5.name = "target";
+    tarca5.isStatic = true;
+
+    const tarca6 = gltfLoader.loadNode('Cube.006');
+    tarca6.name = "target";
+    tarca6.isStatic = true;
+
+    const ograja1 = gltfLoader.loadNode('ograja1');
+    ograja1.isStatic = true;
+
+    const ogr2 = gltfLoader.loadNode('ograja2');
+    ogr2.isStatic = true;
+
+    const ograja3 = gltfLoader.loadNode('ograja3');
+    ograja3.isStatic = true;
+
+    const ogr4 = gltfLoader.loadNode('ograja4');
+    //graja4 isStatic = true;
+    //ce odkomentiram da napako:(
 
 
 }
