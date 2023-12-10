@@ -33,6 +33,7 @@ import { Physics } from './Physics.js';
 import { CreateBullet } from './CreateBullet.js';
 import { SetStaticDynamic } from './SetStaticDynamic.js';
 import { BulletCollision } from './BulletCollision.js';
+//import { mapRenderer } from './mapRenderer.js';
 
 import { StartUI } from '/StartUI.js';
 import { GameUI } from './GameUI.js';
@@ -59,6 +60,15 @@ async function startGame() {
 
     const scene = gltfLoader.loadScene(gltfLoader.defaultScene);
     SetStaticDynamic(gltfLoader);
+    
+    //model.addComponent(new mapRenderer(model,document.body));
+    /*
+    const gltfLoader3 = new GLTFLoader();
+    await gltfLoader3.load('common/models/teren2.gltf');
+
+    const tla = gltfLoader3.loadNode('Plane');
+    scene.addChild(tla);
+    */
 
     // TANK
     const tank = gltfLoader.loadNode('telo');
