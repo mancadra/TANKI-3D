@@ -50,7 +50,6 @@ export class CevController {
             }
         });
 
-
         this.keydownHandler = this.keydownHandler.bind(this); // pritisk na tipko
         this.keyupHandler = this.keyupHandler.bind(this); // spust tipke
 
@@ -62,11 +61,13 @@ export class CevController {
 
         const transform = this.node.getComponentOfType(Transform);
         if (transform) {
-            //console.log("PITCH: ", this.pitch); // MAX value pitcha je lahko 0.3 (če se premakne gpr gre v minus)
            
             // Update rotation based on the Euler angles.
+            // Blocking the max/min pitch for the rotation of glava
             if (this.pitch > 0.3) this.pitch = 0.3;
             if (this.pitch < -0.296) this.pitch = -0.296;
+
+            // Applying the rotation
             const rotation = quat.create();
             quat.rotateY(rotation, rotation, this.yaw);
             quat.rotateX(rotation, rotation, this.pitch);
@@ -97,7 +98,6 @@ export class CevController {
             CreateBullet( this.node, this.top_glava, this.scene, power, this.trk); // Modify this call to pass necessary parameters
         }
     }
-
 
     keyupHandler(e) {
         this.keys[e.code] = false;

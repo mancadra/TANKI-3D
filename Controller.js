@@ -1,8 +1,6 @@
 import { quat, vec3, mat4 } from './lib/gl-matrix-module.js';
 
 import { Transform } from './common/engine/core/Transform.js';
-import { CreateBullet } from './CreateBullet.js'; // Import the CreateBullet function
-import { Bullet } from './Bullet.js'; // Import the CreateBullet function
 
 
 
@@ -10,14 +8,12 @@ export class Controller {
 
     constructor(node, domElement,  {
         distance = 5, //oddaljenost od kamere
-        pitch = 0,
-        yaw = 0, // nihanje
+        yaw = 0, // rotacija levo/desno
         velocity = [0, 0, 0], // hitrost
         acceleration = 50, // pospešek
         maxSpeed = 75,
-        decay = 0.9999999,
-        //pointerSensitivity = 0.002,
-        baseRotationSpeed = 0.006,
+        decay = 0.9999999, // pojemek
+        baseRotationSpeed = 0.006, // the speed at which the base of the tank rotates
     } = {}) {
         this.node = node;
         this.domElement = domElement;
@@ -25,14 +21,12 @@ export class Controller {
         this.keys = {};
 
         this.distance = distance;
-        this.pitch = pitch;
         this.yaw = yaw;
 
         this.velocity = velocity;
         this.acceleration = acceleration;
         this.maxSpeed = maxSpeed;
         this.decay = decay;
-        //this.pointerSensitivity = pointerSensitivity;
         this.baseRotationSpeed = baseRotationSpeed;
 
         this.initHandlers();
@@ -51,34 +45,30 @@ export class Controller {
     }
 
     update(t, dt) {
-        //console.log(dt, t);
         const rotation = quat.create();
         const twopi = Math.PI * 2;   
 
         const cos = Math.cos(this.yaw);
         const sin = Math.sin(this.yaw);
         const forward = [-sin, 0, -cos];
-        const right = [cos, 0, -sin];
 
         const acc = vec3.create()
+
+        // Translation of the tank forward/backward
         if (this.keys['KeyW']) {
-            // console.log("W pressed");
             vec3.sub(acc, acc, forward);
         }
         if (this.keys['KeyS']) {
-            // console.log("S pressed");
             vec3.add(acc, acc, forward);
         }
+
+        // Rotation of the tank left/right
         if (this.keys['KeyD']) {
-            // console.log("D pressed");
-            //vec3.sub(acc, acc, right);
             const speed = vec3.length(this.velocity);
             if (speed < 2)
                 this.yaw -= 1 * this.baseRotationSpeed;
         }
         if (this.keys['KeyA']) {
-            // console.log("A pressed");
-            //vec3.add(acc, acc, right);
             const speed = vec3.length(this.velocity);
             if (speed < 2)
                 this.yaw += 1 * this.baseRotationSpeed;
@@ -86,7 +76,7 @@ export class Controller {
 
         vec3.scaleAndAdd(this.velocity, this.velocity, acc, dt * this.acceleration);
 
-        // If there is no user input apply decay
+        // If there is no user input apply decay to stop the tank
         if (!this.keys['KeyW'] &&
             !this.keys['KeyS'] &&
             !this.keys['KeyD'] &&
@@ -111,21 +101,14 @@ export class Controller {
 
         this.yaw = ((this.yaw % twopi) + twopi) % twopi;
         quat.rotateY(rotation, rotation, this.yaw);
-        //quat.rotateX(rotation, rotation, this.pitch);
         transform.rotation = rotation;
     }
+    
 
-    
-    // Controller.js
-    
+    // Return true if there was any key pressed/ unpressed
     keydownHandler(e) {
         this.keys[e.code] = true;
-
-       /* if (e.code === 'Space') {
-            CreateBullet( top_glava, scene, trk); // Modify this call to pass necessary parameters
-        }*/
     }
-
 
     keyupHandler(e) {
         this.keys[e.code] = false;

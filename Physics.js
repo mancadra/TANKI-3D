@@ -24,6 +24,7 @@ export class Physics {
         return !(min1 > max2 || min2 > max1);
     }
 
+    // Checking for intersection between the two bounding boxes
     aabbIntersection(aabb1, aabb2) {
         return this.intervalIntersection(aabb1.min[0], aabb1.max[0], aabb2.min[0], aabb2.max[0])
             && this.intervalIntersection(aabb1.min[1], aabb1.max[1], aabb2.min[1], aabb2.max[1])
