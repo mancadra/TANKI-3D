@@ -25,7 +25,7 @@ export class StartUI {
         startButton.textContent = 'Start Game';
         startButton.style.fontSize = '2em';
         startButton.style.padding = '20px 40px';
-        startButton.style.margin = 'auto';
+        startButton.style.margin = '0 auto';
         startButton.style.backgroundColor = '#FFFFFF';
         startButton.style.color = '#000000';
         startButton.style.border = '2px solid #000000';
@@ -41,7 +41,7 @@ export class StartUI {
         instructionsButton.textContent = 'Instructions';
         instructionsButton.style.fontSize = '1.5em';
         instructionsButton.style.padding = '20px 40px';
-        instructionsButton.style.marginTop = '20px';
+        instructionsButton.style.marginTop = '40px';
         instructionsButton.style.marginBottom = '50px'; 
         instructionsButton.style.backgroundColor = '#FFFFFF';
         instructionsButton.style.color = '#000000';
