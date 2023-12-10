@@ -54,7 +54,7 @@ export function SetStaticDynamic(gltfLoader) {
     ograja3.isStatic = true;
 
     const ogr4 = gltfLoader.loadNode('ograja4');
-    //graja4 isStatic = true;
+    ogr4.isStatic = true;
     //ce odkomentiram da napako:(
 
 
