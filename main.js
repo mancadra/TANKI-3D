@@ -185,9 +185,9 @@ async function startGame() {
     const gui = new GUI();
     const controller = tank.getComponentOfType(Controller);
     gui.add(controller, 'baseRotationSpeed', 0.0001, 0.01);
-    gui.add(controller, 'maxSpeed', 0, 200);
+    gui.add(controller, 'maxSpeed', 0, 75);
     gui.add(controller, 'decay', 0, 1);
-    gui.add(controller, 'acceleration', 1, 100);
+    gui.add(controller, 'acceleration', 1, 50);
 
 
 }
