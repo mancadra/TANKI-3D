@@ -25,7 +25,7 @@ export class StartUI {
         startButton.textContent = 'Start Game';
         startButton.style.fontSize = '2em';
         startButton.style.padding = '20px 40px';
-        startButton.style.margin = '0 auto';
+        startButton.style.marginTop = '10%';
         startButton.style.backgroundColor = '#FFFFFF';
         startButton.style.color = '#000000';
         startButton.style.border = '2px solid #000000';
