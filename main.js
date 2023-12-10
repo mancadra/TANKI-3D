@@ -78,8 +78,8 @@ async function startGame() {
     const camera = scene.find(node => node.getComponentOfType(Camera));
     glava.addChild(camera);
 
-    //const bullet = gltfLoader.loadNode('Sphere');
-    //scene.removeChild(bullet);
+    const bullet = gltfLoader.loadNode('Sphere');
+    scene.removeChild(bullet);
     //bullet.addComponent(new CreateBullet(gltfLoader, top_glava, scene));
 
 
