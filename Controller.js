@@ -10,10 +10,10 @@ export class Controller {
         distance = 5, //oddaljenost od kamere
         yaw = 0, // rotacija levo/desno
         velocity = [0, 0, 0], // hitrost
-        acceleration = 50, // pospešek
-        maxSpeed = 75,
+        acceleration = 30, // pospešek
+        maxSpeed = 40,
         decay = 0.9999999, // pojemek
-        baseRotationSpeed = 0.006, // the speed at which the base of the tank rotates
+        baseRotationSpeed = 0.0013, // the speed at which the base of the tank rotates
     } = {}) {
         this.node = node;
         this.domElement = domElement;
