@@ -71,8 +71,6 @@ fn vertex(input : VertexInput) -> VertexOutput {
     return output;
 }
 
-///
-
 struct mat2 {
     col1: vec2f,
     col2: vec2f,
@@ -88,9 +86,6 @@ fn rotate(angle: f32) -> mat2x2<f32> {
 
 fn diffuseFactor(normal : vec3f, light_direction : vec3f) -> f32 {
     var df : f32 = dot(normalize(normal), normalize(light_direction));
-    /*if (!fragmentInputs.frontFacing) {
-        df = -df;
-    }*/ //TREBA NAREDITI KASNEJE
 
     return max(0.0, df);
 }
@@ -142,15 +137,10 @@ fn fragment(input : FragmentInput) -> FragmentOutput {
     let dotColor = vec4(vec3(surface_color), 1.0);
 
 
-    //output.color = materialColor * (ambientFactor + dotColor);
-   //output.color = vec4f(vec3f(surface_color), 1.0) * materialColor;
-
-
     // Determine if the dot pattern is closer to black
     let isDotPatternBlack = dotColor.r < 0.1 && dotColor.g < 0.1 && dotColor.b < 0.1;
 
-    // Blend based on Lambert factor and dot pattern
-    
+
     var finalColor = (dotColor + ambientFactor ) * materialColor; // Default to material color
 
     

@@ -101,16 +101,12 @@ async function startGame() {
         translation: [3, 3, 3],
     }));
     light.addComponent(new Light({
-        ambient: 0.3,
+        ambient: 0.4,
     }));
     scene.addChild(light);
 
     
-    //sun
-    //const sunLightPosition = [100, 100, 0]; // Adjust the position as needed
-   // const sunLight = new SunLight(scene, sunLightPosition, 0.5);
-   // scene.addChild(sunLight);
-
+    
     const physics = new Physics(scene);
 
     scene.traverse(node => {

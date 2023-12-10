@@ -30,13 +30,10 @@ export class Bullet {
         //Calculate initial velocity based on top_glava rotation
         const forwardDirection = vec3.fromValues(0, -1, 0); // Forward direction
         const initialVelocity = vec3.create()
-        //console.log("Pred transformaciji" + initialVelocity);
-        //console.log("Rotacija glave" + top_glava_rotation);
+        
         vec3.transformQuat(initialVelocity, forwardDirection, top_glava_rotation); // Apply top_glava rotation
-        //console.log("Po transformaciji" + initialVelocity);
         vec3.scale(initialVelocity, initialVelocity, bulletSpeed); // Scale by bullet speed
-       //initialVelocity[2] = initialVelocity[2];
-       //vec3.normalize(initialVelocity, initialVelocity);
+;
 
         this.velocity = initialVelocity;
         this.gravity = gravity;
@@ -71,16 +68,7 @@ export class Bullet {
         }
     
         vec3.scaleAndAdd(transform.translation, transform.translation, this.velocity, dt);
-       // console.log(transform.translation[1]);
-        // if (transform.translation[1] < -10) { 
-        //      this.removeBullet(transform);
-        //     /*this.velocity = [0, 0, this.bulletSpeed];
-        //     this.glava.removeChild(this.node);
-
-        //     //ponastavimo pozicijo bulleta
-        //     vec3.set(transform.translation, 0, 0, 0);
-        //     this.glava.addChild(this.node);*/
-        // }
+     
     
     }
 
@@ -100,10 +88,10 @@ export class Bullet {
             // Assume TargetsHit is a global variable or part of a game state manager
             TargetsHit++;
             this.trk.stTrk++;
-            //this.bulletRemoved();
+           
             this.removeBullet(this.node.getComponentOfType(Transform));
         } else {
-            //this.bulletRemoved();
+           
             this.removeBullet(this.node.getComponentOfType(Transform));
         }
     }
@@ -113,22 +101,4 @@ export class Bullet {
 
 
 export let TargetsHit = 0;
-/*
-Kot node bomo podasli bullet, 
-naš vektor premika se bo posodabljal p' = p + hitrost * spremembaCasa
-hitrost se bo spreminjala hitrost' = hitrost + pospešek * spremembaCasa
 
-??? kako spreminjamo smer vektorja
-
-če bo z v vektorju pod našim basom se node izbriše
-
-
-*/
-
-
-
-// 1. Prvi iztrelek je drugačen ker imamo v blenderju kroglo izrisano pred cevjo, tu pa jo ponastavimo v izhodišče koordinatnega sistema
-
-// 2. Ko premaknemo tank med tem ko smo že izstrelili se hkrati premakne tudi izstreljini metek(je še vedno child glave)
-
-// 3. Krogle se če premaknemo naklon cevi, izbrišejo prekmalu
