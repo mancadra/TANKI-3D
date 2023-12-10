@@ -50,7 +50,7 @@ import { getGlobalModelMatrix, getLocalModelMatrix} from './common/engine/core/S
 // }
 //}
 
-export async function CreateBullet( top_glava, scene, power) {
+export async function CreateBullet( glava, top_glava, scene, power) {
     const gltfLoader = new GLTFLoader();
     await gltfLoader.load('common/models/tank.gltf');
     
@@ -65,7 +65,8 @@ export async function CreateBullet( top_glava, scene, power) {
                 max: [0.2, 0.2, 0.2],
             }
 
-            const bTransform = bullet.getComponentsOfType(Transform);
+            
+            
 
             const globalTransform = getGlobalModelMatrix(top_glava);
             //console.log(getGlobalModelMatrix(top_glava));
@@ -76,23 +77,30 @@ export async function CreateBullet( top_glava, scene, power) {
 
                 // Calculate the bullet's initial position at the tip of the cannon
             // Assuming the tip of the cannon is offset along the cannon's local Z-axis
-            const cannonTipOffset = vec3.fromValues(0, 0, 1); // Adjust this vector based on your model
+            const cannonTipOffset = vec3.fromValues(0, 0, 0); // Adjust this vector based on your model
             vec3.transformQuat(cannonTipOffset, cannonTipOffset, globalRotation);
             vec3.add(globalTranslation, globalTranslation, cannonTipOffset);
 
 
-            bTransform.translation = globalTranslation;
-            bTransform.rotation = globalRotation;
+            const bTransform = bullet.getComponentsOfType(Transform)[0]; // Accessing the first Transform component
+
+            // Apply the calculated global transformation to the bullet's Transform component
+            if (bTransform) {
+                bTransform.translation = globalTranslation;
+                bTransform.rotation = globalRotation;
+            }
+
 
             // Set the bullet's initial velocity in the direction of the cannon
             const initialVelocity = vec3.create();
             vec3.scale(initialVelocity, cannonTipOffset, power); // 'power' determines the bullet's speed
             bullet.velocity = initialVelocity;
+            //bullet.translation=bTransform;
 
-            console.log("Bullet koordinate", bTransform.rotation);
+            console.log("Bullet koordinate", bTransform.translation);
            
 
-            bullet.addComponent(new Bullet(bullet, scene,  document.body));
+            bullet.addComponent(new Bullet(bullet, scene,  document.body, globalRotation));
             bullet.addComponent(new BulletCollision(bullet, scene));
             scene.addChild(bullet);
 
