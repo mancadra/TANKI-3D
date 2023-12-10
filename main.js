@@ -132,7 +132,6 @@ async function startGame() {
 
     // Example: Update sections
     gameUI.updateSection('Health', '100%');
-    gameUI.updateSection('Time', '2:00');      //čas bi mogl nastimat da se odsteva
     gameUI.updateSection('Targets', '6')        //posodabljanje ko se zadane tarca...
 
 
@@ -159,13 +158,18 @@ async function startGame() {
     }
 
     function render() {
+        let currentTime = Date.now();
         let elapsedTime = (Date.now() - startTime) / 1000; // seconds
         frameCount = frameCount +1;
+
+        let remainingTime = Math.max(0, 12 - elapsedTime);
+        gameUI.updateTimer(remainingTime);
+
         //const backgroundMusic = document.getElementById('backgroundMusic');
        // backgroundMusic.play();
-        if (frameCount >= 1000) {
+        if (remainingTime <= 0) {
            // backgroundMusic.pause();
-            endUI.show();
+            endUI.show(remainingTime);
         }
         //console.log("Frame:" + frameCount);
         renderer.render(scene, camera,u_resolution, elapsedTime, frameCount);

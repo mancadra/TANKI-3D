@@ -2,10 +2,9 @@
 export class EndUI {
     constructor() {
         // Create end screen elements
-        
     }
 
-    show() {
+    show(remainingTime) {
         this.endScreen = document.createElement('div');
         this.endScreen.id = 'end-screen';
         this.endScreen.style.position = 'absolute';
@@ -21,20 +20,20 @@ export class EndUI {
         this.endScreen.style.fontSize = '2em';
         this.endScreen.style.cursor = 'none'; // Hide mouse cursor
 
-
         // Title
         const title = document.createElement('h1');
         title.textContent = 'THE END';
         this.endScreen.appendChild(title);
+
         // Text
         const text1 = document.createElement('p');
         text1.textContent = 'Press Enter to try again';
         text1.style.fontSize = '1em';
         text1.style.opacity = '1';
         this.endScreen.appendChild(text1);
-        
+
         const text2 = document.createElement('p');
-        text2.textContent = 'Time spent: Targets hit: ';  //posodabljanje
+        text2.textContent = `Time left: ${remainingTime.toFixed(2)} seconds`; // Display the remaining time
         text2.style.fontSize = '0.5em';
         text2.style.opacity = '1';
         this.endScreen.appendChild(text2);
