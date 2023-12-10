@@ -60,8 +60,6 @@ async function startGame() {
     const scene = gltfLoader.loadScene(gltfLoader.defaultScene);
     SetStaticDynamic(gltfLoader);
 
-    //const backgroundMusic = document.getElementById('backgroundMusic');
-
     // TANK
     const tank = gltfLoader.loadNode('telo');
     tank.isDynamic = true;
@@ -130,6 +128,10 @@ async function startGame() {
     ////GameUI
     const gameUI = new GameUI();
 
+    const backgroundMusic = document.getElementById('backgroundMusic');
+    backgroundMusic.volume = 0.2;
+    backgroundMusic.play();
+
     // Example: Update sections
     gameUI.updateSection('Health', '100%');
     gameUI.updateSection('Targets', '6')        //posodabljanje ko se zadane tarca...
@@ -165,10 +167,8 @@ async function startGame() {
         let remainingTime = Math.max(0, 120 - elapsedTime);
         gameUI.updateTimer(remainingTime);
 
-        //const backgroundMusic = document.getElementById('backgroundMusic');
-       // backgroundMusic.play();
         if (remainingTime <= 0) {
-           // backgroundMusic.pause();
+            backgroundMusic.pause();
             endUI.show(remainingTime);
         }
         //console.log("Frame:" + frameCount);
