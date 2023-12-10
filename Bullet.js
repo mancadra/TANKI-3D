@@ -14,8 +14,8 @@ import {
 
 export class Bullet {
     static activeBullets = 0; // Static variable to keep track of active bullets
-    constructor(node, scene, domElement, top_glava_rotation,{
-        bulletSpeed = 20, // initial bullet speed at
+    constructor(node, scene, domElement, top_glava_rotation, trk, {
+        bulletSpeed = 40, // initial bullet speed at
         velocity = [0, 0, bulletSpeed],
         gravity = 9.81,
         resistance = 0.0,
@@ -23,6 +23,7 @@ export class Bullet {
         this.node = node;
         this.scene = scene;
         this.domElement = domElement;
+        this.trk = trk;
        
         this.bulletSpeed = bulletSpeed;
 
@@ -95,6 +96,7 @@ export class Bullet {
             // Increase TargetsHit counter
             // Assume TargetsHit is a global variable or part of a game state manager
             TargetsHit++;
+            this.trk.stTrk++;
             //this.bulletRemoved();
             this.removeBullet(this.node.getComponentOfType(Transform));
         } else {

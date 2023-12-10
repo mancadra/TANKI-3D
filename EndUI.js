@@ -4,7 +4,7 @@ export class EndUI {
         // Create end screen elements
     }
 
-    show(remainingTime) {
+    show(remainingTime, stTrk) {
         this.endScreen = document.createElement('div');
         this.endScreen.id = 'end-screen';
         this.endScreen.style.position = 'absolute';
@@ -25,23 +25,58 @@ export class EndUI {
         title.textContent = 'THE END';
         this.endScreen.appendChild(title);
 
-        // Text
-        const text1 = document.createElement('p');
-        text1.textContent = 'Press Enter to try again';
-        text1.style.fontSize = '1em';
-        text1.style.opacity = '1';
-        this.endScreen.appendChild(text1);
+        // Congrats text
+        if (stTrk == 6) {
+            clearTimeout(remainingTime);
+            const textC = document.createElement('p');
+            textC.textContent = 'Congrats you hit all the targets';
+            textC.style.fontSize = '1em';
+            textC.style.opacity = '1';
+            this.endScreen.appendChild(textC);
 
-        const text2 = document.createElement('p');
-        text2.textContent = `Time left: ${remainingTime.toFixed(2)} seconds`; // Display the remaining time
-        text2.style.fontSize = '0.5em';
-        text2.style.opacity = '1';
-        this.endScreen.appendChild(text2);
+            const text1 = document.createElement('p');
+            text1.textContent = 'Press Enter to play again';
+            text1.style.fontSize = '1em';
+            text1.style.opacity = '1';
+            this.endScreen.appendChild(text1);
 
-        // Flashing effect
-        setInterval(() => {
-            text1.style.opacity = text1.style.opacity === '1' ? '0' : '1';
-        }, 1000); // Change opacity every second
+            const text2 = document.createElement('p');
+            text2.textContent = `Time left: ${remainingTime.toFixed(2)} seconds`; // Display the remaining time
+            text2.style.fontSize = '0.5em';
+            text2.style.opacity = '1';
+            this.endScreen.appendChild(text2);
+            
+            setInterval(() => {
+                text1.style.opacity = text1.style.opacity === '1' ? '0' : '1';
+            }, 1000); // Change opacity every second
+
+        } else {
+            const remT = remainingTime;
+            const textC = document.createElement('p');
+            textC.textContent = 'You ran out of time';
+            textC.style.fontSize = '1em';
+            textC.style.opacity = '1';
+            this.endScreen.appendChild(textC);
+
+            const text1 = document.createElement('p');
+            text1.textContent = 'Press Enter to play again';
+            text1.style.fontSize = '1em';
+            text1.style.opacity = '1';
+            this.endScreen.appendChild(text1);
+
+            const text2 = document.createElement('p');
+            text2.textContent = `Time left: ${remainingTime.toFixed(2)} seconds`; // Display the remaining time
+            text2.style.fontSize = '0.5em';
+            text2.style.opacity = '1';
+            text2.style.color = 'red';
+            this.endScreen.appendChild(text2);
+
+            // Flashing effect
+            setInterval(() => {
+                text1.style.opacity = text1.style.opacity === '1' ? '0' : '1';
+            }, 1000); // Change opacity every second
+
+        }   
 
         // Append to body
         document.body.appendChild(this.endScreen);
