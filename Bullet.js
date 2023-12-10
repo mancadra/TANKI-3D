@@ -28,13 +28,16 @@ export class Bullet {
         this.bulletSpeed = bulletSpeed;
 
         //Calculate initial velocity based on top_glava rotation
-        const forwardDirection = vec3.fromValues(0, 0, 1); // Forward direction
+        const forwardDirection = vec3.fromValues(0, -1, 0); // Forward direction
         const initialVelocity = vec3.create()
-        console.log("Pred transformaciji" + initialVelocity);;
-        vec3.transformQuat(initialVelocity, forwardDirection,top_glava_rotation); // Apply top_glava rotation
-        console.log("Po transformaciji" + initialVelocity);
+        //console.log("Pred transformaciji" + initialVelocity);
+        //console.log("Rotacija glave" + top_glava_rotation);
+        vec3.transformQuat(initialVelocity, forwardDirection, top_glava_rotation); // Apply top_glava rotation
+        //console.log("Po transformaciji" + initialVelocity);
         vec3.scale(initialVelocity, initialVelocity, bulletSpeed); // Scale by bullet speed
-        
+       //initialVelocity[2] = initialVelocity[2];
+       //vec3.normalize(initialVelocity, initialVelocity);
+
         this.velocity = initialVelocity;
         this.gravity = gravity;
         this.resistance = resistance;
