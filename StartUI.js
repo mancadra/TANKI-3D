@@ -1,4 +1,3 @@
-// StartUI.js
 export class StartUI {
     constructor(startCallback) {
         this.startCallback = startCallback;
@@ -24,18 +23,63 @@ export class StartUI {
         // Start button
         const startButton = document.createElement('button');
         startButton.textContent = 'Start Game';
-        startButton.style.fontSize = '2em'; // Larger font size for better visibility
-        startButton.style.padding = '20px 40px'; // Bigger button for better visibility
-        startButton.style.margin = 'auto'; // Center button in the screen
-        startButton.style.backgroundColor = '#FFFFFF'; // A color that stands out
-        startButton.style.color = '#000000'; // Text color that contrasts with the button
-        startButton.style.border = '2px solid #000000'; // Add border to enhance visibility
+        startButton.style.fontSize = '2em';
+        startButton.style.padding = '20px 40px';
+        startButton.style.margin = 'auto';
+        startButton.style.backgroundColor = '#FFFFFF';
+        startButton.style.color = '#000000';
+        startButton.style.border = '2px solid #000000';
         startButton.style.cursor = 'pointer';
         startButton.onclick = () => {
             titleScreen.style.display = 'none';
             this.startCallback();
         };
         titleScreen.appendChild(startButton);
+
+        // Instructions button
+        const instructionsButton = document.createElement('button');
+        instructionsButton.textContent = 'Instructions';
+        instructionsButton.style.fontSize = '1.5em';
+        instructionsButton.style.padding = '20px 40px';
+        instructionsButton.style.marginTop = '20px';
+        instructionsButton.style.marginBottom = '50px'; 
+        instructionsButton.style.backgroundColor = '#FFFFFF';
+        instructionsButton.style.color = '#000000';
+        instructionsButton.style.border = '2px solid #000000';
+        instructionsButton.style.cursor = 'pointer';
+        instructionsButton.onclick = () => {
+            // Create larger pop-up modal
+            const popup = document.createElement('div');
+            popup.style.position = 'fixed';
+            popup.style.top = '50%';
+            popup.style.left = '50%';
+            popup.style.transform = 'translate(-50%, -50%)';
+            popup.style.backgroundColor = '#FFFFFF';
+            popup.style.padding = '40px';
+            popup.style.border = '2px solid #000000';
+            popup.style.zIndex = '1000';
+
+            const instructionsText = document.createElement('p');
+            instructionsText.textContent = 'Tvoja naloga je da poskušaš v čim krajšem času zadeti vse tarče. Tarč je 6. Po polju se lahko premikaš s tipkami awsd z miško pa rotiraš glavo. Space uporabi za streljanje';
+            popup.appendChild(instructionsText);
+
+            // Cancel button inside the pop-up
+            const cancelButton = document.createElement('button');
+            cancelButton.textContent = 'Cancel';
+            cancelButton.style.marginTop = '20px';
+            cancelButton.style.backgroundColor = '#FFFFFF';
+            cancelButton.style.color = '#000000';
+            cancelButton.style.border = '2px solid #000000';
+            cancelButton.style.cursor = 'pointer';
+            cancelButton.onclick = () => {
+                document.body.removeChild(popup);
+            };
+            popup.appendChild(cancelButton);
+
+            document.body.appendChild(popup);
+        };
+
+        titleScreen.appendChild(instructionsButton);
 
         // Append to body
         document.body.appendChild(titleScreen);

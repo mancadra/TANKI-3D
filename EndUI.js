@@ -24,18 +24,24 @@ export class EndUI {
 
         // Title
         const title = document.createElement('h1');
-        title.textContent = 'The end;)';
+        title.textContent = 'THE END';
         this.endScreen.appendChild(title);
         // Text
-        const text = document.createElement('p');
-        text.textContent = 'Press Enter to try again';
-        text.style.fontSize = '1em';
-        text.style.opacity = '1';
-        this.endScreen.appendChild(text);
+        const text1 = document.createElement('p');
+        text1.textContent = 'Press Enter to try again';
+        text1.style.fontSize = '1em';
+        text1.style.opacity = '1';
+        this.endScreen.appendChild(text1);
+        
+        const text2 = document.createElement('p');
+        text2.textContent = 'Time spent: Targets hit: ';  //posodabljanje
+        text2.style.fontSize = '0.5em';
+        text2.style.opacity = '1';
+        this.endScreen.appendChild(text2);
 
         // Flashing effect
         setInterval(() => {
-            text.style.opacity = text.style.opacity === '1' ? '0' : '1';
+            text1.style.opacity = text1.style.opacity === '1' ? '0' : '1';
         }, 1000); // Change opacity every second
 
         // Append to body
