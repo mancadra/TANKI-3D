@@ -14,8 +14,8 @@ export class Controller {
         yaw = 0, // nihanje
         velocity = [0, 0, 0], // hitrost
         acceleration = 50, // pospešek
-        maxSpeed = 200,
-        decay = 0.99999,
+        maxSpeed = 75,
+        decay = 0.9999999,
         //pointerSensitivity = 0.002,
         baseRotationSpeed = 0.006,
     } = {}) {
@@ -72,12 +72,16 @@ export class Controller {
         if (this.keys['KeyD']) {
             // console.log("D pressed");
             //vec3.sub(acc, acc, right);
-            this.yaw -= 1 * this.baseRotationSpeed;
+            const speed = vec3.length(this.velocity);
+            if (speed < 2)
+                this.yaw -= 1 * this.baseRotationSpeed;
         }
         if (this.keys['KeyA']) {
             // console.log("A pressed");
             //vec3.add(acc, acc, right);
-            this.yaw += 1 * this.baseRotationSpeed;
+            const speed = vec3.length(this.velocity);
+            if (speed < 2)
+                this.yaw += 1 * this.baseRotationSpeed;
         }
 
         vec3.scaleAndAdd(this.velocity, this.velocity, acc, dt * this.acceleration);
