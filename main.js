@@ -162,7 +162,7 @@ async function startGame() {
         let elapsedTime = (Date.now() - startTime) / 1000; // seconds
         frameCount = frameCount +1;
 
-        let remainingTime = Math.max(0, 12 - elapsedTime);
+        let remainingTime = Math.max(0, 120 - elapsedTime);
         gameUI.updateTimer(remainingTime);
 
         //const backgroundMusic = document.getElementById('backgroundMusic');
