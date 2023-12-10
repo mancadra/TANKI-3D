@@ -74,12 +74,12 @@ async function startGame() {
     }));
     const glava = gltfLoader.loadNode('glava');
     const top_glava = gltfLoader.loadNode('top_glava');
-    glava.addComponent(new CevController(glava, top_glava, document.body));
+    glava.addComponent(new CevController(glava, top_glava, document.body,scene));
     const camera = scene.find(node => node.getComponentOfType(Camera));
     glava.addChild(camera);
 
-    const bullet = gltfLoader.loadNode('Sphere');
-    scene.removeChild(bullet);
+    //const bullet = gltfLoader.loadNode('Sphere');
+    //scene.removeChild(bullet);
     //bullet.addComponent(new CreateBullet(gltfLoader, top_glava, scene));
 
 
@@ -118,7 +118,7 @@ async function startGame() {
 
     let nrTrk = 0;
 
-    CreateBullet(gltfLoader, top_glava, scene, trk);
+    //CreateBullet(gltfLoader, top_glava, scene, trk);
 
 
 
@@ -163,7 +163,7 @@ async function startGame() {
         frameCount = frameCount +1;
         //const backgroundMusic = document.getElementById('backgroundMusic');
        // backgroundMusic.play();
-        if (frameCount >= 1000) {
+        if (frameCount >= 10000) {
            // backgroundMusic.pause();
             endUI.show();
         }

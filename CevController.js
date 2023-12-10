@@ -1,10 +1,11 @@
 import { quat, vec3, mat4 } from './lib/gl-matrix-module.js';
+import { CreateBullet } from './CreateBullet.js'; // Import the CreateBullet function
 
 import { Transform } from './common/engine/core/Transform.js';
 
 export class CevController {
 
-    constructor(node, top_glava, domElement, {
+    constructor(node, top_glava, domElement, scene, {
         pitch = 0,
         yaw = 0,
         velocity = [0, 0, 0],
@@ -16,6 +17,8 @@ export class CevController {
         this.node = node;
         this.top_glava = top_glava;
         this.domElement = domElement;
+
+        this.scene = scene;
 
         this.keys = {};
 
@@ -45,6 +48,13 @@ export class CevController {
                 doc.removeEventListener('pointermove', this.pointermoveHandler);
             }
         });
+
+
+        this.keydownHandler = this.keydownHandler.bind(this); // pritisk na tipko
+        this.keyupHandler = this.keyupHandler.bind(this); // spust tipke
+
+        doc.addEventListener('keydown', this.keydownHandler);
+        doc.addEventListener('keyup', this.keyupHandler);
     }
 
     update(t, dt) {
@@ -75,6 +85,21 @@ export class CevController {
 
         this.pitch = Math.min(Math.max(this.pitch, -halfpi), halfpi);
         this.yaw = ((this.yaw % twopi) + twopi) % twopi;
+    }
+
+     // Controller.js
+     keydownHandler(e) {
+        this.keys[e.code] = true;
+        let power = 5;
+
+        if (e.code === 'Space') {
+            CreateBullet( this.top_glava, this.scene, power); // Modify this call to pass necessary parameters
+        }
+    }
+
+
+    keyupHandler(e) {
+        this.keys[e.code] = false;
     }
 
 }

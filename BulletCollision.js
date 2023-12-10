@@ -2,12 +2,13 @@ import { vec3, mat4 } from './lib/gl-matrix-module.js';
 import { getGlobalModelMatrix } from './common/engine/core/SceneUtils.js';
 import { Transform } from './common/engine/core.js';
 
+import { Bullet, TargetsHit } from './Bullet.js'; // Make sure to import Bullet and TargetsHit
+
 export class BulletCollision {
 
-    constructor(bullet, scene, trk) {
+    constructor(bullet, scene) {
         this.bullet = bullet;
         this.scene = scene;
-        this.trk = trk;
     }
 
     update(t, dt) {
@@ -16,12 +17,12 @@ export class BulletCollision {
                 const isColliding = this.resolveCollision(this.bullet, other);
                 if (isColliding) {
                     console.log("Collision!!!!!!!!!!");
-                    this.removeBullet();
-                    if (other.name == "target") {
-                        console.log("Tarča zadeta!!!");
-                        this.scene.removeChild(other);
-                        this.trk.boolTrk = true;
+                    if (other.name === "Cube") { // Check if the name of the collided object is "Cube"
+                        console.log("Target hit!!!");
+                        this.scene.removeChild(other); // Remove the target
+                        TargetsHit++; // Increment the number of targets hit
                     }
+                    this.removeBullet(); // Remove the bullet in both cases
                 }
             }
         });
