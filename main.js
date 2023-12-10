@@ -91,7 +91,7 @@ async function startGame() {
         translation: [3, 3, 3],
     }));
     light.addComponent(new Light({
-        ambient: 0.7,
+        ambient: 0.3,
     }));
     scene.addChild(light);
 
@@ -153,7 +153,13 @@ async function startGame() {
         frameCount = frameCount +1;
 
         let remainingTime = Math.max(0, 120 - elapsedTime);
-        gameUI.updateTimer(remainingTime);
+        const minutes = Math.floor(remainingTime / 60);
+        const seconds = Math.floor(remainingTime % 60);
+
+        console.log(minutes + ":" + seconds);
+
+        gameUI.updateSection('Time', minutes + ":" + seconds);
+
 
         if ((remainingTime <= 0 || trk.stTrk == 6) && konecIgre == false) {
             // backgroundMusic.pause();

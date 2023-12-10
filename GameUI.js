@@ -2,7 +2,6 @@
 export class GameUI {
     constructor() {
         this.overlay = this.createOverlay();
-        this.timerElement = this.createTimerElement();
     }
 
     createOverlay() {
@@ -20,6 +19,7 @@ export class GameUI {
     
         this.addSection(overlay, 'Health');
         this.addSection(overlay, 'Targets hit:');
+        this.addSection(overlay, 'Time');
 
         // Append to body
         document.body.appendChild(overlay);
@@ -27,13 +27,7 @@ export class GameUI {
         return overlay;
     }
 
-    createTimerElement() {
-        const timer = document.createElement('div');
-        timer.style.color = 'white';
-        timer.style.fontSize = '1em';
-        this.overlay.appendChild(timer);
-        return timer;
-    }
+  
 
     addSection(parent, title) {
         const section = document.createElement('div');
@@ -66,32 +60,6 @@ export class GameUI {
             }
         });
     }
-    updateTimer(timeInSeconds) {
-        const minutes = Math.floor(timeInSeconds / 60);
-        const seconds = Math.floor(timeInSeconds % 60);
-      // Clear the previous content
-    this.timerElement.innerHTML = '';
 
-    // Create the "Time:" element
-    const timeLabel = document.createElement('div');
-    timeLabel.textContent = 'Time:';;
-    timeLabel.style.paddingTop = '30px'; // Adjust the spacing between the lines
-    timeLabel.style.color = 'white';
-    timeLabel.style.textAlign = 'center';
-    this.timerElement.appendChild(timeLabel);
-
-    // Create the countdown time element
-    const countdownTime = document.createElement('div');
-    countdownTime.textContent = `${minutes}:${seconds}`;
-
-    countdownTime.style.color = 'white';
-    countdownTime.style.textAlign = 'center';
-    this.timerElement.appendChild(countdownTime);
-}
-   /* updateTimer(timeInSeconds) {
-        const minutes = Math.floor(timeInSeconds / 60);
-        const seconds = Math.floor(timeInSeconds % 60);
-        this.timerElement.textContent = `Time: ${minutes}:${seconds}`;
-    }*/
     
 }
