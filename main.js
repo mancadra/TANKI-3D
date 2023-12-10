@@ -137,7 +137,7 @@ async function startGame() {
         scene.traverse(node => {
             for (const component of node.components) {
                 component.update?.(time, dt);
-                console.log(trk.stTrk);
+                //console.log(trk.stTrk);
             }
         });
         physics.update(time, dt);
