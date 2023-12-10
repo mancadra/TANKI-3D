@@ -1,6 +1,10 @@
 import { quat, vec3, mat4 } from './lib/gl-matrix-module.js';
 
 import { Transform } from './common/engine/core/Transform.js';
+import { CreateBullet } from './CreateBullet.js'; // Import the CreateBullet function
+import { Bullet } from './Bullet.js'; // Import the CreateBullet function
+
+
 
 export class Controller {
 
@@ -107,9 +111,17 @@ export class Controller {
         transform.rotation = rotation;
     }
 
+    
+    // Controller.js
+    
     keydownHandler(e) {
         this.keys[e.code] = true;
+
+       /* if (e.code === 'Space') {
+            CreateBullet( top_glava, scene, trk); // Modify this call to pass necessary parameters
+        }*/
     }
+
 
     keyupHandler(e) {
         this.keys[e.code] = false;

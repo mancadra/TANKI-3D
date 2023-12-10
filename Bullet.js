@@ -13,6 +13,7 @@ import {
 
 
 export class Bullet {
+    static activeBullets = 0; // Static variable to keep track of active bullets
     constructor(node, scene, domElement, {
         bulletSpeed = 40, // initial bullet speed at
         velocity = [0, 0, bulletSpeed],
@@ -27,6 +28,20 @@ export class Bullet {
         this.velocity = velocity;
         this.gravity = gravity;
         this.resistance = resistance;
+    }
+
+     // Call this method when a bullet is fired
+     static bulletFired() {
+        if (this.activeBullets < 10) {
+            this.activeBullets++;
+            return true;
+        }
+        return false; // If there are already 10 bullets, do not fire
+    }
+
+     // Call this method when a bullet is removed
+     static bulletRemoved() {
+        this.activeBullets--;
     }
 
     update(t, dt) {
@@ -65,9 +80,25 @@ export class Bullet {
         this.scene.removeChild(this.node);
         //this.glava.addChild(this.node);
     }
+
+    handleCollision(hitObject) {
+        if (hitObject === "Cube") {
+            // Increase TargetsHit counter
+            // Assume TargetsHit is a global variable or part of a game state manager
+            TargetsHit++;
+            //this.bulletRemoved();
+            this.removeBullet(this.node.getComponentOfType(Transform));
+        } else {
+            //this.bulletRemoved();
+            this.removeBullet(this.node.getComponentOfType(Transform));
+        }
+    }
+
+
 }
 
 
+export let TargetsHit = 0;
 /*
 Kot node bomo podasli bullet, 
 naš vektor premika se bo posodabljal p' = p + hitrost * spremembaCasa

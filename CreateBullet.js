@@ -50,10 +50,12 @@ import { getGlobalModelMatrix, getLocalModelMatrix} from './common/engine/core/S
 // }
 //}
 
-export function CreateBullet(gltfLoader, top_glava, scene, trk) {
-    window.addEventListener('keydown', (event) => { 
-        if (event.key === " ") {
-            console.log("Space key pressed");
+export async function CreateBullet( top_glava, scene, power) {
+    const gltfLoader = new GLTFLoader();
+    await gltfLoader.load('common/models/tank.gltf');
+    
+    if (Bullet.bulletFired()){ // Check if a new bullet can be fired
+            console.log("Creating a bullet");
 
             const bullet = gltfLoader.loadNode('Sphere'); 
             
@@ -66,21 +68,38 @@ export function CreateBullet(gltfLoader, top_glava, scene, trk) {
             const bTransform = bullet.getComponentsOfType(Transform);
 
             const globalTransform = getGlobalModelMatrix(top_glava);
+            //console.log(getGlobalModelMatrix(top_glava));
             const globalTranslation = vec3.create();
             const globalRotation = quat.create();
             mat4.getTranslation(globalTranslation, globalTransform);
             mat4.getRotation(globalRotation, globalTransform);
 
+                // Calculate the bullet's initial position at the tip of the cannon
+            // Assuming the tip of the cannon is offset along the cannon's local Z-axis
+            const cannonTipOffset = vec3.fromValues(0, 0, 1); // Adjust this vector based on your model
+            vec3.transformQuat(cannonTipOffset, cannonTipOffset, globalRotation);
+            vec3.add(globalTranslation, globalTranslation, cannonTipOffset);
+
+
             bTransform.translation = globalTranslation;
             bTransform.rotation = globalRotation;
+
+            // Set the bullet's initial velocity in the direction of the cannon
+            const initialVelocity = vec3.create();
+            vec3.scale(initialVelocity, cannonTipOffset, power); // 'power' determines the bullet's speed
+            bullet.velocity = initialVelocity;
+
             console.log("Bullet koordinate", bTransform.rotation);
-            scene.addChild(bullet);
+           
 
             bullet.addComponent(new Bullet(bullet, scene,  document.body));
-            bullet.addComponent(new BulletCollision(bullet, scene, trk));
+            bullet.addComponent(new BulletCollision(bullet, scene));
+            scene.addChild(bullet);
+
+            bullet.onRemove = () => Bullet.bulletRemoved();  //mogoče treba prestavit v Bullet.js
             // return true;
-        }
-    });
+        
+    };
 } 
     
 
