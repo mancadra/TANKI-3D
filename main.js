@@ -67,12 +67,15 @@ async function startGame() {
         min: [-0.24, -0.2, -0.2],
         max: [0.2, 0.2, 0.2],
     }
+    let trk = { // naredimo object
+        stTrk: 0
+    };
     tank.addComponent(new Controller(tank, document.body, {
         distance: 2,
     }));
     const glava = gltfLoader.loadNode('glava');
     const top_glava = gltfLoader.loadNode('top_glava');
-    glava.addComponent(new CevController(glava, top_glava, document.body,scene));
+    glava.addComponent(new CevController(glava, top_glava, document.body,scene, trk));
     const camera = scene.find(node => node.getComponentOfType(Camera));
     glava.addChild(camera);
 
@@ -108,18 +111,6 @@ async function startGame() {
         node.aabb = mergeAxisAlignedBoundingBoxes(boxes);
     });
 
-
-    //const cB = new CreateBullet(gltfLoader, top_glava, scene);
-    let trk = { // naredimo object
-        boolTrk: false
-    }
-
-    let nrTrk = 0;
-
-    //CreateBullet(gltfLoader, top_glava, scene, trk);
-
-
-
     //DOT_Shader spremenljivke
     let startTime = Date.now();
     let frameCount = 0;
@@ -146,11 +137,7 @@ async function startGame() {
         scene.traverse(node => {
             for (const component of node.components) {
                 component.update?.(time, dt);
-                if (trk.boolTrk == true) {
-                    nrTrk++;
-                    console.log("WOOOOOO", nrTrk);
-                }
-                trk.boolTrk = false;
+                console.log(trk.stTrk);
             }
         });
         physics.update(time, dt);
@@ -158,18 +145,20 @@ async function startGame() {
         //createBullet(bullet, top_glava, scene);
         
     }
+    let konecIgre = false;
 
     function render() {
         let elapsedTime = (Date.now() - startTime) / 1000; // seconds
         frameCount = frameCount +1;
 
-        let remainingTime = Math.max(0, 30 - elapsedTime);
+        let remainingTime = Math.max(0, 120 - elapsedTime);
         gameUI.updateTimer(remainingTime);
 
-        if (remainingTime <= 0) {
-            backgroundMusic.pause();
-            endUI.show(remainingTime);
-        }
+        if ((remainingTime <= 0 || trk.stTrk == 6) && konecIgre == false) {
+            // backgroundMusic.pause();
+             konecIgre = true;
+             endUI.show(remainingTime, trk.stTrk);
+         }
         //console.log("Frame:" + frameCount);
         renderer.render(scene, camera,u_resolution, elapsedTime, frameCount);
     }

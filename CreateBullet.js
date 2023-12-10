@@ -50,7 +50,7 @@ import { getGlobalModelMatrix, getLocalModelMatrix} from './common/engine/core/S
 // }
 //}
 
-export async function CreateBullet( glava, top_glava, scene, power) {
+export async function CreateBullet( glava, top_glava, scene, power, trk) {
     const gltfLoader = new GLTFLoader();
     await gltfLoader.load('common/models/tank.gltf');
     
@@ -101,7 +101,7 @@ export async function CreateBullet( glava, top_glava, scene, power) {
            
 
             bullet.addComponent(new Bullet(bullet, scene,  document.body, globalRotation));
-            bullet.addComponent(new BulletCollision(bullet, scene));
+            bullet.addComponent(new BulletCollision(bullet, scene, trk));
             scene.addChild(bullet);
 
             bullet.onRemove = () => Bullet.bulletRemoved();  //mogoče treba prestavit v Bullet.js

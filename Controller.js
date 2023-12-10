@@ -8,7 +8,7 @@ import { Bullet } from './Bullet.js'; // Import the CreateBullet function
 
 export class Controller {
 
-    constructor(node, domElement, {
+    constructor(node, domElement,  {
         distance = 5, //oddaljenost od kamere
         pitch = 0,
         yaw = 0, // nihanje

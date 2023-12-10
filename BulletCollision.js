@@ -6,9 +6,10 @@ import { Bullet, TargetsHit } from './Bullet.js'; // Make sure to import Bullet 
 
 export class BulletCollision {
 
-    constructor(bullet, scene) {
+    constructor(bullet, scene, trk) {
         this.bullet = bullet;
         this.scene = scene;
+        this.trk = trk;
     }
 
     update(t, dt) {
@@ -17,10 +18,13 @@ export class BulletCollision {
                 const isColliding = this.resolveCollision(this.bullet, other);
                 if (isColliding) {
                     console.log("Collision!!!!!!!!!!");
+                    this.trk.stTrk++;
+                    
                     if (other.name === "Cube") { // Check if the name of the collided object is "Cube"
                         console.log("Target hit!!!");
                         this.scene.removeChild(other); // Remove the target
                         TargetsHit++; // Increment the number of targets hit
+                        this.trk.stTrk++;
                     }
                     this.removeBullet(); // Remove the bullet in both cases
                 }

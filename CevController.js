@@ -5,7 +5,7 @@ import { Transform } from './common/engine/core/Transform.js';
 
 export class CevController {
 
-    constructor(node, top_glava, domElement, scene, {
+    constructor(node, top_glava, domElement, scene, trk, {
         pitch = 0,
         yaw = 0,
         velocity = [0, 0, 0],
@@ -17,6 +17,7 @@ export class CevController {
         this.node = node;
         this.top_glava = top_glava;
         this.domElement = domElement;
+        this.trk = trk;
 
         this.scene = scene;
         
@@ -93,7 +94,7 @@ export class CevController {
         let power = 5;
 
         if (e.code === 'Space') {
-            CreateBullet( this.node, this.top_glava, this.scene, power); // Modify this call to pass necessary parameters
+            CreateBullet( this.node, this.top_glava, this.scene, power, this.trk); // Modify this call to pass necessary parameters
         }
     }
 
