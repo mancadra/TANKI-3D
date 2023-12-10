@@ -67,9 +67,11 @@ async function startGame() {
         min: [-0.24, -0.2, -0.2],
         max: [0.2, 0.2, 0.2],
     }
+
     let trk = { // naredimo object
         stTrk: 0
     };
+
     tank.addComponent(new Controller(tank, document.body, {
         distance: 2,
     }));
@@ -125,8 +127,7 @@ async function startGame() {
 
     // Example: Update sections
     gameUI.updateSection('Health', '100%');
-    gameUI.updateSection('Targets', '6')        //posodabljanje ko se zadane tarca...
-
+    gameUI.updateSection('Targets hit:', trk.stTrk);        //posodabljanje ko se zadane tarca...
 
     ///EndUI
     const endUI = new EndUI();
@@ -137,12 +138,12 @@ async function startGame() {
         scene.traverse(node => {
             for (const component of node.components) {
                 component.update?.(time, dt);
-                console.log(trk.stTrk);
+                //console.log(trk.stTrk);
             }
         });
         physics.update(time, dt);
-        //cB.update(time, dt);
-        //createBullet(bullet, top_glava, scene);
+        gameUI.updateSection('Targets hit:', trk.stTrk); 
+
         
     }
     let konecIgre = false;

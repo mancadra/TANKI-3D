@@ -95,7 +95,7 @@ export class Bullet {
     }
 
     handleCollision(hitObject) {
-        if (hitObject === "Cube") {
+        if (hitObject === "target") {
             // Increase TargetsHit counter
             // Assume TargetsHit is a global variable or part of a game state manager
             TargetsHit++;

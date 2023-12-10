@@ -19,7 +19,7 @@ export class GameUI {
 
     
         this.addSection(overlay, 'Health');
-        this.addSection(overlay, 'Targets');
+        this.addSection(overlay, 'Targets hit:');
 
         // Append to body
         document.body.appendChild(overlay);

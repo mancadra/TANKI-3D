@@ -17,13 +17,10 @@ export class BulletCollision {
             if (this.bullet !== other && other.isStatic) {
                 const isColliding = this.resolveCollision(this.bullet, other);
                 if (isColliding) {
-                    console.log("Collision!!!!!!!!!!");
-                    this.trk.stTrk++;
-                    
-                    if (other.name === "Cube") { // Check if the name of the collided object is "Cube"
+                    if (other.name === "target") { // Check if the name of the collided object is "Cube"
                         console.log("Target hit!!!");
                         this.scene.removeChild(other); // Remove the target
-                        TargetsHit++; // Increment the number of targets hit
+                       // TargetsHit++; // Increment the number of targets hit
                         this.trk.stTrk++;
                     }
                     this.removeBullet(); // Remove the bullet in both cases

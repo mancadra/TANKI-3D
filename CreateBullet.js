@@ -66,6 +66,7 @@ export async function CreateBullet( glava, top_glava, scene, power, trk) {
             }
 
             
+
             
 
             const globalTransform = getGlobalModelMatrix(top_glava);
@@ -98,7 +99,7 @@ export async function CreateBullet( glava, top_glava, scene, power, trk) {
             //bullet.translation=bTransform;
 
             console.log("Bullet koordinate", bTransform.translation);
-           
+
 
             bullet.addComponent(new Bullet(bullet, scene,  document.body, globalRotation));
             bullet.addComponent(new BulletCollision(bullet, scene, trk));
