@@ -16,20 +16,20 @@ export class StartUI {
         titleScreen.style.flexDirection = 'column';
         titleScreen.style.justifyContent = 'center';
         titleScreen.style.alignItems = 'center';
-        titleScreen.style.backgroundColor = 'rgba(0, 0, 0, 0.85)';
-        titleScreen.style.color = 'white';
-        titleScreen.style.fontSize = '2em';
-
-        // Title
-        const title = document.createElement('h1');
-        title.textContent = 'Tanks 3D-ish ;)';
-        titleScreen.appendChild(title);
+        titleScreen.style.backgroundImage = "url('common/models/Tanks3D_titleScreen.png')";
+        titleScreen.style.backgroundSize = 'cover';
+        titleScreen.style.backgroundPosition = 'center center';
+        titleScreen.style.backgroundRepeat = 'no-repeat';
 
         // Start button
         const startButton = document.createElement('button');
         startButton.textContent = 'Start Game';
-        startButton.style.fontSize = '1em';
-        startButton.style.padding = '10px 20px';
+        startButton.style.fontSize = '2em'; // Larger font size for better visibility
+        startButton.style.padding = '20px 40px'; // Bigger button for better visibility
+        startButton.style.margin = 'auto'; // Center button in the screen
+        startButton.style.backgroundColor = '#FFFFFF'; // A color that stands out
+        startButton.style.color = '#000000'; // Text color that contrasts with the button
+        startButton.style.border = '2px solid #000000'; // Add border to enhance visibility
         startButton.style.cursor = 'pointer';
         startButton.onclick = () => {
             titleScreen.style.display = 'none';
