@@ -15,7 +15,7 @@ import {
 export class Bullet {
     static activeBullets = 0; // Static variable to keep track of active bullets
     constructor(node, scene, domElement, top_glava_rotation,{
-        bulletSpeed = 40, // initial bullet speed at
+        bulletSpeed = 20, // initial bullet speed at
         velocity = [0, 0, bulletSpeed],
         gravity = 9.81,
         resistance = 0.0,
@@ -27,12 +27,14 @@ export class Bullet {
         this.bulletSpeed = bulletSpeed;
 
         //Calculate initial velocity based on top_glava rotation
-        const forwardDirection = vec3.fromValues(1, 0, 0); // Forward direction
-        const initialVelocity = vec3.create();
-        vec3.transformQuat(initialVelocity, forwardDirection, top_glava_rotation); // Apply top_glava rotation
+        const forwardDirection = vec3.fromValues(0, 0, 1); // Forward direction
+        const initialVelocity = vec3.create()
+        console.log("Pred transformaciji" + initialVelocity);;
+        vec3.transformQuat(initialVelocity, forwardDirection,this.node.rotation); // Apply top_glava rotation
+        console.log("Po transformaciji" + initialVelocity);
         vec3.scale(initialVelocity, initialVelocity, bulletSpeed); // Scale by bullet speed
         
-        this.velocity = velocity;
+        this.velocity = initialVelocity;
         this.gravity = gravity;
         this.resistance = resistance;
     }
