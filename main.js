@@ -120,7 +120,7 @@ async function startGame() {
     const gameUI = new GameUI();
 
     const backgroundMusic = document.getElementById('backgroundMusic');
-    backgroundMusic.volume = 0.2;
+    backgroundMusic.volume = 0.0;
     backgroundMusic.play();
 
     // Example: Update sections
