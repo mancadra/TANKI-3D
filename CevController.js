@@ -19,7 +19,7 @@ export class CevController {
         this.domElement = domElement;
 
         this.scene = scene;
-
+        
         this.keys = {};
 
         this.pitch = pitch;
@@ -93,7 +93,7 @@ export class CevController {
         let power = 5;
 
         if (e.code === 'Space') {
-            CreateBullet( this.top_glava, this.scene, power); // Modify this call to pass necessary parameters
+            CreateBullet( this.node, this.top_glava, this.scene, power); // Modify this call to pass necessary parameters
         }
     }
 
