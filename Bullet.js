@@ -42,7 +42,7 @@ export class Bullet {
 
      // Call this method when a bullet is fired
      static bulletFired() {
-        if (this.activeBullets < 10) {
+        if (this.activeBullets < 30) {
             this.activeBullets++;
             return true;
         }
